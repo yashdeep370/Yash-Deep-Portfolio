@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YASH DEEP - Portfolio</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Config for specific colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        bg: '#050505',
+                        surface: '#111111', 
+                        surfaceHover: '#1a1a1a',
+                        accent: '#3e8bf3', 
+                        textMain: '#ffffff',
+                        textMuted: '#9ca3af',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'spin-slow': 'spin 3s linear infinite', /* Smooth loading spin */
+                        'clock-spin': 'spin 10s linear infinite', /* Steady clock rotation */
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: white;
+            overflow-x: hidden; /* Prevent scrollbar from cursor element */
+        }
+        
+        .nav-pill {
+            background-color: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* The Cursor Glow Effect */
+        #cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 600px;
+            height: 600px;
+            /* Creates the soft blue/white spotlight look */
+            background: radial-gradient(circle, rgba(62, 139, 243, 0.15) 0%, rgba(255, 255, 255, 0.05) 25%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none; /* Lets clicks pass through to buttons */
+            transform: translate(-50%, -50%);
+            z-index: 0; /* Behind content */
+            filter: blur(50px); /* Soften edges */
+            transition: transform 0.1s ease-out; /* Smooth follow delay */
+            will-change: transform, top, left;
+        }
+
+        /* Gradient Text for the new section */
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- The Glow Element -->
+    <div id="cursor-glow"></div>
+
+    <!-- Navbar -->
+    <nav class="w-full fixed top-0 z-50 pt-6 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Logo Section -->
+            <div class="flex items-center gap-3">
+                <!-- Logo Icon -->
+                <div class="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                
+                <div class="flex flex-col justify-center">
+                    <span class="font-semibold text-lg leading-tight">YASH DEEP</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links (Desktop) -->
+            <div class="hidden md:flex items-center gap-1 nav-pill rounded-full px-2 py-1.5">
+                <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Experience</a>
+                <a href="#skills" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Skills</a>
+                <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Projects</a>
+                <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Testimonial</a>
+            </div>
+
+            <!-- Hire Me Button -->
+            <div class="flex items-center gap-4">
+                <button class="flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 px-5 py-2.5 rounded-lg transition-all text-sm font-medium">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    Hire me
+                </button>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-white text-xl p-2" onclick="toggleMenu()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden absolute top-20 left-4 right-4 bg-surface border border-white/10 rounded-xl p-4 md:hidden flex-col gap-2 shadow-2xl">
+            <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Experience</a>
+            <a href="#skills" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Skills</a>
+            <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Projects</a>
+            <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Testimonial</a>
+        </div>
+    </nav>
+
+    <!-- Main Hero Content -->
+    <main class="w-full flex flex-col items-center justify-center px-4 text-center mt-32 sm:mt-40 relative z-10 min-h-[80vh]">
+        
+        <!-- Background Orbs (Static) -->
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+
+        <div class="max-w-4xl mx-auto z-10 space-y-8 animate-fade-in-up">
+            
+            <!-- Headline -->
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-[1.1]">
+                Creative <span class="text-white">Webflow</span><br>
+                <span class="text-white">development wizard</span>
+            </h1>
+
+            <!-- Subheadline -->
+            <p class="text-textMuted text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
+                Helping agencies deliver pixel-perfect Webflow websites without the overhead of an in-house team.
+            </p>
+
+            <!-- Buttons Group -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                
+                <!-- Primary CTA -->
+                <a href="#" class="group relative inline-flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 text-white px-8 py-4 rounded-lg transition-all w-full sm:w-auto justify-center">
+                    <span class="font-medium">Work with me</span>
+                    <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                </a>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- PROCESS / STATS SECTION -->
+    <section id="skills" class="w-full py-24 px-4 relative z-10">
+        <div class="max-w-6xl mx-auto text-center space-y-16">
+            
+            <!-- Section Header -->
+            <div class="space-y-4">
+                <p class="text-sm text-textMuted font-medium uppercase tracking-wider">Solution that will save your time</p>
+                <h2 class="text-3xl md:text-5xl font-semibold text-white max-w-3xl mx-auto leading-tight">
+                    Automate development &<br> launch with precision
+                </h2>
+            </div>
+
+            <!-- Diagrams Container -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative">
+                
+                <!-- Connecting Line (Desktop Only) -->
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-y-1/2 z-0"></div>
+
+                <!-- ITEM 1: Strategy -->
+                <div class="relative z-10 flex flex-col items-center gap-6 group">
+                    <!-- Increased Size: w-64 h-64 -->
+                    <div class="relative w-64 h-64 flex items-center justify-center">
+                        <!-- Outer Glow -->
+                        <div class="absolute inset-0 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all duration-500"></div>
+                        
+                        <!-- SVG Chart -->
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <!-- Background Circle -->
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#1a1a1a" stroke-width="1" />
+                            <!-- Dashed decoration -->
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="#333" stroke-width="0.5" stroke-dasharray="2 4" />
+                            <!-- Gradient Arc -->
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#9333ea;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#grad1)" stroke-width="1.5" stroke-dasharray="220 1000" stroke-linecap="round" class="animate-spin-slow" style="transform-origin: 50px 50px;" />
+                            
+                            <!-- Dots -->
+                            <circle cx="50" cy="5" r="1.5" fill="white" /> <!-- Top Dot -->
+                            <circle cx="5" cy="50" r="1.5" fill="#3b82f6" /> <!-- Left Dot -->
+                        </svg>
+
+                        <!-- Label in Center -->
+                        <div class="absolute inset-0 flex items-center justify-center text-center px-4">
+                            <span class="text-gray-100 text-base font-bold tracking-wide drop-shadow-lg leading-tight">
+                                Strategic<br>Thinking
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ITEM 2: Development -->
+                <div class="relative z-10 flex flex-col items-center gap-6 group">
+                    <!-- Increased Size: w-64 h-64 -->
+                    <div class="relative w-64 h-64 flex items-center justify-center">
+                         <!-- Outer Glow -->
+                         <div class="absolute inset-0 bg-blue-500/5 rounded-full blur-xl group-hover:bg-blue-500/15 transition-all duration-500"></div>
+                        
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                             <!-- Background Ring -->
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#111" stroke-width="8" />
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#1a1a1a" stroke-width="1" />
+                            
+                            <!-- Inner decoration -->
+                            <circle cx="50" cy="50" r="30" fill="none" stroke="#222" stroke-width="15" />
+
+                            <!-- Progress Arc -->
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="1" stroke-dasharray="140 300" stroke-opacity="0.3" class="animate-spin duration-[10s] linear" style="transform-origin: center;" />
+                            
+                            <!-- Connecting dots decoration -->
+                            <circle cx="95" cy="50" r="2" fill="white" stroke="#050505" stroke-width="1" />
+                        </svg>
+
+                        <!-- Label in Center -->
+                        <div class="absolute inset-0 flex items-center justify-center text-center px-4">
+                            <span class="text-gray-100 text-base font-bold tracking-wide drop-shadow-lg leading-tight">
+                                Relentless<br>Dedication
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ITEM 3: Launch -->
+                <div class="relative z-10 flex flex-col items-center gap-6 group">
+                    <!-- Increased Size: w-64 h-64 -->
+                    <div class="relative w-64 h-64 flex items-center justify-center">
+                        <svg class="w-full h-full" viewBox="0 0 100 100">
+                            <!-- Ticks Ring -->
+                            <g stroke="#333" stroke-width="0.5">
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(0 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(20 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(40 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(60 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(80 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(100 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(120 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(140 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(160 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(180 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(200 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(220 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(240 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(260 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(270 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(280 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(290 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(300 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(310 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(320 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(330 50 50)" />
+                                <line x1="50" y1="10" x2="50" y2="15" transform="rotate(340 50 50)" />
+                            </g>
+                            
+                            <!-- Needle (Clock Hand) -->
+                            <!-- UPDATED: Shortened y2 from 10 to 20, and cy from 10 to 20 -->
+                            <g class="animate-clock-spin" style="transform-origin: 50px 50px;">
+                                <line x1="50" y1="50" x2="50" y2="20" stroke="white" stroke-width="1" />
+                                <circle cx="50" cy="20" r="2" fill="white" stroke="#050505" stroke-width="1" />
+                            </g>
+                        </svg>
+
+                        <!-- Label in Center -->
+                        <!-- UPDATED: Removed mt-12 to center vertical alignment -->
+                        <div class="absolute inset-0 flex items-center justify-center text-center px-4">
+                            <span class="text-gray-100 text-base font-bold tracking-wide drop-shadow-lg leading-tight">
+                                Consistent<br>Execution
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Simple Footer for Context (Optional) -->
+    <footer class="w-full py-6 text-center text-white/20 text-xs relative z-10">
+        &copy; 2024 Yash Deep. All rights reserved.
+    </footer>
+
+    <script>
+        // Simple Mobile Menu Toggle
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+        }
+
+        // Cursor Glow Effect
+        const cursorGlow = document.getElementById('cursor-glow');
+
+        // Only run on desktop/large screens to save performance on mobile
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', (e) => {
+                // Update position
+                // Use requestAnimationFrame for smoother performance
+                requestAnimationFrame(() => {
+                    cursorGlow.style.left = e.clientX + 'px';
+                    cursorGlow.style.top = e.clientY + 'px';
+                });
+            });
+        } else {
+            // Center it or hide it on touch devices
+            cursorGlow.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
