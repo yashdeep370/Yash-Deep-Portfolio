@@ -56,6 +56,10 @@
     </script>
 
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             /* Removed background-color here to allow canvas to be visible */
             color: white;
@@ -92,7 +96,71 @@
         .text-gradient {
             background: linear-gradient(to right, #ffffff, #9ca3af);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        /* Flashcard Modal Styles */
+        .flashcard-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .flashcard-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .flashcard-modal {
+            background: linear-gradient(135deg, rgba(17, 17, 17, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(62, 139, 243, 0.1);
+        }
+
+        .flashcard-overlay.active .flashcard-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .flashcard-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .flashcard-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
         }
     </style>
 </head>
@@ -118,7 +186,6 @@
             <div class="hidden md:flex items-center gap-1 nav-pill rounded-full px-2 py-1.5">
                 <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Experience</a>
                 <a href="#skills" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Skills</a>
-                <a href="#tech-stack" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Tech Stack</a>
                 <a href="#projects" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Projects</a>
                 <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Testimonial</a>
             </div>
@@ -138,7 +205,6 @@
         <div id="mobile-menu" class="hidden absolute top-20 left-4 right-4 bg-surface border border-white/10 rounded-xl p-4 md:hidden flex-col gap-2 shadow-2xl">
             <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Experience</a>
             <a href="#skills" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Skills</a>
-            <a href="#tech-stack" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Tech Stack</a>
             <a href="#projects" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Projects</a>
             <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Testimonial</a>
         </div>
@@ -172,17 +238,18 @@
         </div>
     </main>
 
-    <section id="skills" class="w-full py-24 px-4 relative z-10">
+    <section id="solutions" class="w-full pt-24 pb-12 px-4 relative z-10">
         <div class="max-w-6xl mx-auto text-center space-y-16">
             
             <div class="space-y-4">
                 <p class="text-sm text-textMuted font-medium uppercase tracking-wider">Solution that will save your time</p>
                 <h2 class="text-3xl md:text-5xl font-semibold text-white max-w-3xl mx-auto leading-tight">
-                    Automate development &<br> launch with precision
+                    Building for today,<br>
+                    learning for infinity
                 </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 relative">
                 
                 <div class="hidden md:block absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-y-1/2 z-0"></div>
 
@@ -314,6 +381,65 @@
         </div>
     </section>
 
+    <section id="skills" class="w-full pt-12 pb-24 px-4 relative z-10">
+        <div class="max-w-6xl mx-auto space-y-12">
+            <div class="text-center space-y-3">
+                <p class="text-sm text-textMuted font-medium uppercase tracking-[0.3em]">Core Capabilities</p>
+                <h2 class="text-3xl md:text-4xl font-semibold text-white">Skills that drive every build</h2>
+                <p class="text-textMuted max-w-3xl mx-auto">
+                    From strategy to launch, I blend craftsmanship with systems thinking to keep complex projects moving fast without sacrificing polish.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="group rounded-3xl border border-white/5 bg-surface/40 p-8 backdrop-blur-xl hover:-translate-y-1 hover:border-white/10 transition-all cursor-pointer" onclick="openFlashcard('fullstack')">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-300 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-compass text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Full-Stack Development</h3>
+                    <p class="text-textMuted text-sm leading-relaxed">
+                        Build seamless, end-to-end digital experiences by combining robust frontend engineering, scalable backend systems, and user-centered design principles.
+                    </p>
+                    <ul class="mt-6 space-y-2 text-sm text-textMuted">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Frontend Engineering</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Backend Development</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> UI & UX Design</li>
+                    </ul>
+                </div>
+
+                <div class="group rounded-3xl border border-white/5 bg-surface/40 p-8 backdrop-blur-xl hover:-translate-y-1 hover:border-white/10 transition-all cursor-pointer" onclick="openFlashcard('datascience-detailed')">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-300 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-chart-line text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Data Science</h3>
+                    <p class="text-textMuted text-sm leading-relaxed">
+                        Turn raw, unstructured information into strategic insights through analytical thinking, statistical modeling, and modern data workflows.
+                    </p>
+                    <ul class="mt-6 space-y-2 text-sm text-textMuted">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Data Analytics</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Data Visualization</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Data Manipulation</li>
+                    </ul>
+                </div>
+
+                <div class="group rounded-3xl border border-white/5 bg-surface/40 p-8 backdrop-blur-xl hover:-translate-y-1 hover:border-white/10 transition-all cursor-pointer" onclick="openFlashcard('aiml')">
+                    <div class="w-12 h-12 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-300 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-brain text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Artificial Intelligence & Machine Learning</h3>
+                    <p class="text-textMuted text-sm leading-relaxed">
+                        Build intelligent systems that learn from data, automate decision-making, and unlock insights through predictive modeling and algorithmic innovation.
+                    </p>
+                    <ul class="mt-6 space-y-2 text-sm text-textMuted">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Model Development</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Deep Learning</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> ML Workflow & Deployment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="tech-stack" class="w-full py-24 relative z-10 overflow-hidden">
         <div class="max-w-6xl mx-auto text-center space-y-12 mb-12">
             
@@ -416,7 +542,7 @@
         </div>
     </section>
 
-    <section id="projects" class="w-full py-24 px-4 relative z-10 border-t border-white/5">
+    <section id="projects" class="w-full py-24 px-4 relative z-10">
         <div class="max-w-6xl mx-auto">
             <div class="mb-16 text-center md:text-left">
                 <p class="text-sm text-textMuted font-medium uppercase tracking-wider mb-4">Selected Work</p>
@@ -425,101 +551,139 @@
                 </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-fr">
                 
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500">
-                    <div class="absolute -inset-1 bg-blue-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:blur-2xl"></div>
+                <!-- Large Featured Card - Spans 2 columns -->
+                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 transition-all duration-500 md:col-span-2 md:row-span-2 opacity-60 grayscale cursor-not-allowed">
+                    <div class="absolute inset-0 bg-black/40 z-20 rounded-2xl"></div>
                     
-                    <div class="aspect-[4/3] overflow-hidden relative z-10">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" alt="Project 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                        
-                        <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right text-lg"></i>
+                    <div class="h-full overflow-hidden relative z-10">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" alt="Project 1" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                    </div>
+
+                    <!-- Coming Soon Overlay -->
+                    <div class="absolute inset-0 z-30 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-lock text-2xl text-white/60"></i>
+                            </div>
+                            <span class="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-medium text-white/80 border border-white/20">Coming Soon</span>
                         </div>
                     </div>
 
-                    <div class="p-8 absolute bottom-0 left-0 w-full z-10">
-                        <div class="flex flex-wrap gap-2 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Web Design</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Development</span>
+                    <div class="p-6 md:p-8 absolute bottom-0 left-0 w-full z-10">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">Web Design</span>
+                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">Development</span>
                         </div>
-                        <h3 class="text-2xl font-semibold text-white mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">Digital Experience</h3>
-                        <p class="text-textMuted text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
+                        <h3 class="text-2xl md:text-3xl font-semibold text-white/80 mb-2">Digital Experience</h3>
+                        <p class="text-textMuted/60 text-sm md:text-base">
                             A complete overhaul of the digital presence for a leading fintech startup, focusing on user acquisition and trust.
                         </p>
                     </div>
                 </div>
 
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500">
-                    <div class="absolute -inset-1 bg-orange-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:blur-2xl"></div>
+                <!-- Medium Card 1 -->
+                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 transition-all duration-500 md:col-span-2 opacity-60 grayscale cursor-not-allowed">
+                    <div class="absolute inset-0 bg-black/40 z-20 rounded-2xl"></div>
 
-                    <div class="aspect-[4/3] overflow-hidden relative z-10">
-                        <img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=2370&auto=format&fit=crop" alt="Project 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                        <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right text-lg"></i>
+                    <div class="aspect-[16/9] overflow-hidden relative z-10">
+                        <img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=2370&auto=format&fit=crop" alt="Project 2" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    </div>
+
+                    <!-- Coming Soon Overlay -->
+                    <div class="absolute inset-0 z-30 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto mb-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-lock text-xl text-white/60"></i>
+                            </div>
+                            <span class="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/80 border border-white/20">Coming Soon</span>
                         </div>
                     </div>
-                    <div class="p-8 absolute bottom-0 left-0 w-full z-10">
-                        <div class="flex flex-wrap gap-2 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">E-commerce</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Strategy</span>
+
+                    <div class="p-6 absolute bottom-0 left-0 w-full z-10">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">E-commerce</span>
                         </div>
-                        <h3 class="text-2xl font-semibold text-white mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">Modern Commerce</h3>
-                        <p class="text-textMuted text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                            Building a scalable, high-performance e-commerce platform for a luxury fashion brand with global reach.
+                        <h3 class="text-xl font-semibold text-white/80 mb-1">Modern Commerce</h3>
+                        <p class="text-textMuted/60 text-xs line-clamp-2">
+                            Building a scalable e-commerce platform for a luxury fashion brand.
                         </p>
                     </div>
                 </div>
 
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500">
-                    <div class="absolute -inset-1 bg-purple-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:blur-2xl"></div>
+                <!-- Small Card 1 -->
+                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 transition-all duration-500 opacity-60 grayscale cursor-not-allowed">
+                    <div class="absolute inset-0 bg-black/40 z-20 rounded-2xl"></div>
 
-                    <div class="aspect-[4/3] overflow-hidden relative z-10">
-                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                        <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right text-lg"></i>
+                    <div class="aspect-square overflow-hidden relative z-10">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Project 3" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    </div>
+
+                    <!-- Coming Soon Overlay -->
+                    <div class="absolute inset-0 z-30 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-10 h-10 mx-auto mb-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-lock text-lg text-white/60"></i>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/80 border border-white/20">Coming Soon</span>
                         </div>
                     </div>
-                    <div class="p-8 absolute bottom-0 left-0 w-full z-10">
-                        <div class="flex flex-wrap gap-2 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Branding</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Webflow</span>
+
+                    <div class="p-4 absolute bottom-0 left-0 w-full z-10">
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">Branding</span>
                         </div>
-                        <h3 class="text-2xl font-semibold text-white mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">Abstract Identity</h3>
-                        <p class="text-textMuted text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                            Crafting a unique visual identity and interactive web experience for a creative design studio.
-                        </p>
+                        <h3 class="text-lg font-semibold text-white/80">Abstract Identity</h3>
                     </div>
                 </div>
 
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500">
-                    <div class="absolute -inset-1 bg-teal-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:blur-2xl"></div>
+                <!-- Small Card 2 -->
+                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 transition-all duration-500 opacity-60 grayscale cursor-not-allowed">
+                    <div class="absolute inset-0 bg-black/40 z-20 rounded-2xl"></div>
 
-                    <div class="aspect-[4/3] overflow-hidden relative z-10">
-                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2370&auto=format&fit=crop" alt="Project 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                        <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right text-lg"></i>
+                    <div class="aspect-square overflow-hidden relative z-10">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2370&auto=format&fit=crop" alt="Project 4" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    </div>
+
+                    <!-- Coming Soon Overlay -->
+                    <div class="absolute inset-0 z-30 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-10 h-10 mx-auto mb-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-lock text-lg text-white/60"></i>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/80 border border-white/20">Coming Soon</span>
                         </div>
                     </div>
-                    <div class="p-8 absolute bottom-0 left-0 w-full z-10">
-                        <div class="flex flex-wrap gap-2 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">SaaS</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Product Design</span>
+
+                    <div class="p-4 absolute bottom-0 left-0 w-full z-10">
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">SaaS</span>
                         </div>
-                        <h3 class="text-2xl font-semibold text-white mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">Tech Dashboard</h3>
-                        <p class="text-textMuted text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                            Designing an intuitive and powerful dashboard interface for a next-generation data analytics platform.
-                        </p>
+                        <h3 class="text-lg font-semibold text-white/80">Tech Dashboard</h3>
                     </div>
                 </div>
 
             </div>
         </div>
     </section>
+
+    <!-- Flashcard Modal -->
+    <div id="flashcard-overlay" class="flashcard-overlay" onclick="closeFlashcardOnOverlay(event)">
+        <div class="flashcard-modal relative" onclick="event.stopPropagation()">
+            <button class="flashcard-close" onclick="closeFlashcard()" aria-label="Close">
+                <i class="fa-solid fa-times"></i>
+            </button>
+            
+            <div id="flashcard-content">
+                <!-- Content will be inserted here -->
+            </div>
+        </div>
+    </div>
 
     <footer class="w-full py-6 text-center text-white/20 text-xs relative z-10">
         &copy; 2024 Yash Deep. All rights reserved.
@@ -555,6 +719,325 @@
                 cursorGlow.style.display = 'none';
             }
         }
+
+        // Flashcard Modal Functions
+        const flashcardContents = {
+            fullstack: `
+                <h2 class="text-3xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🌐</span> Full Stack Developer
+                </h2>
+                <p class="text-textMuted text-lg mb-6 leading-relaxed italic">
+                    Building seamless digital experiences from pixels to production — infinitely scalable.
+                </p>
+                
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
+                        <span>📌</span> Summary
+                    </h3>
+                    <p class="text-textMuted leading-relaxed">
+                        Full Stack Developer with strong expertise in building responsive websites, modern front-end interfaces, backend APIs, and intuitive user experiences. Skilled in blending development with UI/UX design and creative branding to deliver polished, high-impact digital products.
+                    </p>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                        <span>💻</span> Core Skills
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div class="border-l-2 border-purple-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>🖥</span> Frontend Development
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>HTML5, CSS3, JavaScript (ES6+)</li>
+                                <li>React.js / Next.js basics</li>
+                                <li>Responsive, mobile-first design</li>
+                                <li>Tailwind CSS / Bootstrap</li>
+                                <li>Component-based UI development</li>
+                                <li>State management fundamentals</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-purple-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>🛠</span> Backend Development
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Node.js, Express.js</li>
+                                <li>RESTful API design</li>
+                                <li>Authentication (JWT / Sessions)</li>
+                                <li>Basic database operations (MongoDB / SQL)</li>
+                                <li>Server routing & middleware</li>
+                                <li>Git, GitHub, version control workflow</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-purple-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>🎨</span> UI & UX Design
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>User flow & wireframe creation</li>
+                                <li>Design systems & style guides</li>
+                                <li>Prototyping (Figma)</li>
+                                <li>Accessibility-focused design</li>
+                                <li>Usability testing & iteration</li>
+                                <li>Interaction design fundamentals</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-purple-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>✨</span> Graphic Design
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Brand identity & logo creation</li>
+                                <li>Poster, banner, and social media creatives</li>
+                                <li>Typography layouts</li>
+                                <li>Color theory & visual hierarchy</li>
+                                <li>Adobe Photoshop / Illustrator basics</li>
+                                <li>Creative asset building for web</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-purple-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>🌐</span> Web Design
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Landing page design</li>
+                                <li>Portfolio & corporate website layout</li>
+                                <li>Modern visual aesthetics</li>
+                                <li>CTA optimization</li>
+                                <li>Layout spacing & composition</li>
+                                <li>Converting designs to functional front end</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                        <span>⚙️</span> Tools & Technologies
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">VS Code</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">Figma</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">Adobe Suite</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">Git & GitHub</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">Browser DevTools</span>
+                    </div>
+                </div>
+            `,
+            'datascience-detailed': `
+                <h2 class="text-3xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🔹</span> Data Science
+                </h2>
+                <p class="text-textMuted text-lg mb-6 leading-relaxed italic">
+                    Turning raw data into infinite possibilities.
+                </p>
+                
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
+                        <span>📌</span> Summary
+                    </h3>
+                    <p class="text-textMuted leading-relaxed">
+                        Data Science enthusiast skilled in extracting insights, building predictive models, and transforming data into intelligent business decisions. Strong foundation in statistics, machine learning, data cleaning, and visualization with hands-on experience in Python-based data workflows.
+                    </p>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                        <span>📘</span> Core Skills
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div class="border-l-2 border-blue-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>📊</span> Data Analytics
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Exploratory Data Analysis (EDA)</li>
+                                <li>Statistical analysis & hypothesis testing</li>
+                                <li>Data wrangling & preprocessing</li>
+                                <li>Feature engineering</li>
+                                <li>Business insight generation</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-blue-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>📈</span> Data Visualization
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Matplotlib, Plotly, Seaborn</li>
+                                <li>Dashboarding (Power BI / Tableau)</li>
+                                <li>Storytelling with data</li>
+                                <li>Designing clear, decision-driven visuals</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-blue-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>🗂</span> Data Manipulation
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Pandas, NumPy</li>
+                                <li>Handling missing values, outliers</li>
+                                <li>Merging, grouping, transforming datasets</li>
+                                <li>Working with large CSV, Excel, and JSON data</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-blue-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>🤖</span> Machine Learning Basics
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Regression, Classification</li>
+                                <li>Train-test-split, model tuning</li>
+                                <li>Metrics: accuracy, RMSE, F1-score</li>
+                                <li>Model evaluation & improvement</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                        <span>🛠</span> Tools & Technologies
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">Python</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">Jupyter Notebook</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">SQL basics</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">Excel for analytics</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">Git & GitHub</span>
+                    </div>
+                </div>
+            `,
+            aiml: `
+                <h2 class="text-3xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🤖</span> Artificial Intelligence & Machine Learning
+                </h2>
+                <p class="text-textMuted text-lg mb-6 leading-relaxed italic">
+                    Designing systems that learn, adapt, and scale infinitely.
+                </p>
+                
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
+                        <span>📌</span> Summary
+                    </h3>
+                    <p class="text-textMuted leading-relaxed">
+                        AI/ML practitioner focused on building intelligent systems, training predictive models, and applying algorithms that enable machines to think, learn, and evolve. Strong understanding of model lifecycle, optimization, and deployment fundamentals.
+                    </p>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                        <span>🧠</span> Core Skills
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div class="border-l-2 border-green-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>📐</span> Machine Learning
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Supervised & Unsupervised learning</li>
+                                <li>Regression, Classification, Clustering</li>
+                                <li>Feature selection & engineering</li>
+                                <li>Model tuning: GridSearch, RandomizedSearch</li>
+                                <li>Evaluation metrics (Accuracy, Precision, Recall, F1, AUC)</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-green-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>🤖</span> Artificial Intelligence Concepts
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Neural Networks basics</li>
+                                <li>Perceptron, activation functions</li>
+                                <li>Computer vision fundamentals</li>
+                                <li>Natural Language Processing (NLP) basics</li>
+                                <li>Reinforcement learning intuition</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-green-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>📊</span> Model Development Workflow
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>Data preprocessing</li>
+                                <li>Train–test split, cross-validation</li>
+                                <li>Overfitting / underfitting handling</li>
+                                <li>Bias–variance tradeoff</li>
+                                <li>Model interpretation & explainability</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-2 border-green-500/50 pl-4">
+                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                                <span>🧪</span> Deep Learning Foundation
+                            </h4>
+                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
+                                <li>TensorFlow / Keras basics</li>
+                                <li>ANN architecture understanding</li>
+                                <li>Backpropagation intuition</li>
+                                <li>Working with image & text datasets</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                        <span>🛠</span> Tools & Technologies
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">Python</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">Scikit-learn</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">TensorFlow / Keras</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">NumPy, Pandas</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">Jupyter Notebook</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">Git & GitHub</span>
+                    </div>
+                </div>
+            `
+        };
+
+        function openFlashcard(type) {
+            const overlay = document.getElementById('flashcard-overlay');
+            const content = document.getElementById('flashcard-content');
+            
+            if (flashcardContents[type]) {
+                content.innerHTML = flashcardContents[type];
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeFlashcard() {
+            const overlay = document.getElementById('flashcard-overlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeFlashcardOnOverlay(event) {
+            if (event.target === event.currentTarget) {
+                closeFlashcard();
+            }
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeFlashcard();
+            }
+        });
     </script>
     
     <script src="./script.js"></script>
