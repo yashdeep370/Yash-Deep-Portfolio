@@ -38,7 +38,6 @@
                         'clock-spin': 'spin 10s linear infinite',
                         'scroll': 'scroll 20s linear infinite',
                         'spin-smooth': 'spin 4s linear infinite',
-                        // UPDATED: Added pulse-tick for sequential glowing
                         'pulse-tick': 'pulseTick 2s ease-in-out infinite',
                     },
                     keyframes: {
@@ -50,7 +49,6 @@
                             '0%': { transform: 'translateX(0)' },
                             '100%': { transform: 'translateX(-50%)' },
                         },
-                        // New Keyframe for glowing ticks
                         pulseTick: {
                             '0%, 100%': { stroke: '#1a1a1a', strokeWidth: '0.5' },
                             '50%': { stroke: '#ffffff', strokeWidth: '1' },
@@ -173,12 +171,10 @@
             </p>
 
             <!-- Buttons Group -->
-            <!-- UPDATED: Removed potential styling on container, ensured clean flex layout -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 border-none outline-none shadow-none bg-transparent ring-0">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 
                 <!-- Primary CTA -->
-                <!-- UPDATED: Added explicit border-transparent and outline-none to prevent browser defaults -->
-                <a href="#" class="group relative inline-flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 text-white px-8 py-4 rounded-lg transition-all w-full sm:w-auto justify-center outline-none ring-0 focus:ring-0 focus:outline-none no-underline">
+                <a href="#" class="group relative inline-flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 text-white px-8 py-4 rounded-lg transition-all w-full sm:w-auto justify-center">
                     <span class="font-medium">Work with me</span>
                     <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                 </a>
@@ -355,7 +351,7 @@
         </div>
     </section>
 
-    <!-- TECH STACK SECTION -->
+    <!-- TECH STACK SECTION (Reverted to Marquee) -->
     <section id="tech-stack" class="w-full py-24 relative z-10 overflow-hidden">
         <div class="max-w-6xl mx-auto text-center space-y-12 mb-12">
             
@@ -618,13 +614,18 @@
                 // Update position
                 // Use requestAnimationFrame for smoother performance
                 requestAnimationFrame(() => {
-                    cursorGlow.style.left = e.clientX + 'px';
-                    cursorGlow.style.top = e.clientY + 'px';
+                    // Ensure cursorGlow exists before setting style
+                    if (cursorGlow) {
+                        cursorGlow.style.left = e.clientX + 'px';
+                        cursorGlow.style.top = e.clientY + 'px';
+                    }
                 });
             });
         } else {
             // Center it or hide it on touch devices
-            cursorGlow.style.display = 'none';
+            if (cursorGlow) {
+                cursorGlow.style.display = 'none';
+            }
         }
     </script>
 </body>

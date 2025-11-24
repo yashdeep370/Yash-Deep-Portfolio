@@ -3,438 +3,1424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YASH DEEP - Portfolio</title>
-    
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Custom Config for specific colors -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        bg: '#050505',
-                        surface: '#111111', 
-                        surfaceHover: '#1a1a1a',
-                        accent: '#3e8bf3', 
-                        textMain: '#ffffff',
-                        textMuted: '#9ca3af',
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-                        'spin-slow': 'spin 3s linear infinite',
-                        'clock-spin': 'spin 10s linear infinite',
-                        'scroll': 'scroll 20s linear infinite',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        scroll: {
-                            '0%': { transform: 'translateX(0)' },
-                            '100%': { transform: 'translateX(-50%)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
+    <title>Fluid Simulation</title>
     <style>
         body {
-            background-color: #050505;
-            color: white;
-            overflow-x: hidden;
-        }
-        
-        .nav-pill {
-            background-color: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
         }
 
-        #cursor-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(62, 139, 243, 0.15) 0%, rgba(255, 255, 255, 0.05) 25%, rgba(0, 0, 0, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
+        .splash-canvas {
+            width: 100%;
+            height: 100vh;
+            display: block;
+        }
+
+        /* Overlay text to prove it's a background */
+        #main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 0;
-            filter: blur(50px);
-            transition: transform 0.1s ease-out;
-            will-change: transform, top, left;
+            color: white;
+            font-family: sans-serif;
+            pointer-events: none; /* Allows clicks to pass through to the canvas */
+            text-align: center;
+            mix-blend-mode: exclusion;
         }
 
-        .text-gradient {
-            background: linear-gradient(to right, #ffffff, #9ca3af);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        h1 { font-size: 3rem; margin-bottom: 0.5rem; }
+        p { font-size: 1.2rem; opacity: 0.8; }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative">
+<body>
 
-    <!-- The Glow Element -->
-    <div id="cursor-glow"></div>
+    <canvas class="splash-canvas"></canvas>
+    
+    <div id="main">
+        <h1>Fluid Simulation</h1>
+        <p>Click and Drag / Touch to interact</p>
+    </div>
 
-    <!-- Navbar -->
-    <nav class="w-full fixed top-0 z-50 pt-6 px-4 sm:px-8">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            
-            <!-- Logo Section -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                </div>
-                
-                <div class="flex flex-col justify-center">
-                    <span class="font-semibold text-lg leading-tight">YASH DEEP</span>
-                </div>
-            </div>
+    <div class="theme-button" style="display: none;"></div>
 
-            <!-- Navigation Links (Desktop) -->
-            <div class="hidden md:flex items-center gap-1 nav-pill rounded-full px-2 py-1.5">
-                <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Experience</a>
-                <a href="#skills" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Skills</a>
-                <a href="#tech-stack" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Tech Stack</a>
-                <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Testimonial</a>
-            </div>
+<script>
+"use strict";
 
-            <!-- Hire Me Button -->
-            <div class="flex items-center gap-4">
-                <button class="flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 px-5 py-2.5 rounded-lg transition-all text-sm font-medium">
-                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    Hire me
-                </button>
-                
-                <!-- Mobile Menu Button -->
-                <button class="md:hidden text-white text-xl p-2" onclick="toggleMenu()">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-            </div>
-        </div>
+const canvas = document.querySelector(".splash-canvas");
+const homePageBody = document.querySelector("body");
+const mainWrapper = document.querySelector("#main");
+const modeChangeButton = document.querySelector(".theme-button");
 
-        <!-- Mobile Menu (Hidden by default) -->
-        <div id="mobile-menu" class="hidden absolute top-20 left-4 right-4 bg-surface border border-white/10 rounded-xl p-4 md:hidden flex-col gap-2 shadow-2xl">
-            <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Experience</a>
-            <a href="#skills" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Skills</a>
-            <a href="#tech-stack" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Tech Stack</a>
-            <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Testimonial</a>
-        </div>
-    </nav>
+resizeCanvas();
 
-    <!-- Main Hero Content -->
-    <main class="w-full flex flex-col items-center justify-center px-4 text-center mt-32 sm:mt-40 relative z-10 min-h-[80vh]">
-        
-        <!-- Background Orbs (Static) -->
-        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+let config = {
+    SIM_RESOLUTION: 128,
+    DYE_RESOLUTION: 1024,
+    CAPTURE_RESOLUTION: 512,
+    DENSITY_DISSIPATION: 4,
+    VELOCITY_DISSIPATION: 2.87,
+    PRESSURE: 0.43,
+    PRESSURE_ITERATIONS: 20,
+    CURL: 0,
+    SPLAT_RADIUS: 0.28,
+    SPLAT_FORCE: 5000,
+    SHADING: true,
+    COLORFUL: true,
+    COLOR_UPDATE_SPEED: 10,
+    PAUSED: false,
+    BACK_COLOR: { r: 0, g: 0, b: 0 },
+    TRANSPARENT: false,
+    BLOOM: true,
+    BLOOM_ITERATIONS: 8,
+    BLOOM_RESOLUTION: 256,
+    BLOOM_INTENSITY: 0.1,
+    BLOOM_THRESHOLD: 0.6,
+    BLOOM_SOFT_KNEE: 0.7,
+    SUNRAYS: true,
+    SUNRAYS_RESOLUTION: 196,
+    SUNRAYS_WEIGHT: 0.7
+};
 
-        <div class="max-w-4xl mx-auto z-10 space-y-8 animate-fade-in-up">
-            
-            <!-- Headline -->
-            <h1 class="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-[1.1]">
-                Creative <span class="text-white">Webflow</span><br>
-                <span class="text-white">development wizard</span>
-            </h1>
+function pointerPrototype() {
+    this.id = -1;
+    this.texcoordX = 0;
+    this.texcoordY = 0;
+    this.prevTexcoordX = 0;
+    this.prevTexcoordY = 0;
+    this.deltaX = 0;
+    this.deltaY = 0;
+    this.down = false;
+    this.moved = false;
+    this.color = [30, 0, 300];
+}
 
-            <!-- Subheadline -->
-            <p class="text-textMuted text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-                Helping agencies deliver pixel-perfect Webflow websites without the overhead of an in-house team.
-            </p>
+let pointers = [];
+let splatStack = [];
+pointers.push(new pointerPrototype());
 
-            <!-- Buttons Group -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                
-                <!-- Primary CTA -->
-                <a href="#" class="group relative inline-flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 text-white px-8 py-4 rounded-lg transition-all w-full sm:w-auto justify-center">
-                    <span class="font-medium">Work with me</span>
-                    <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
-                </a>
+const { gl, ext } = getWebGLContext(canvas);
 
-            </div>
-
-        </div>
-    </main>
-
-    <!-- TECH STACK SECTION (Moved Here) -->
-    <section id="tech-stack" class="w-full py-24 relative z-10 overflow-hidden">
-        <div class="max-w-6xl mx-auto text-center space-y-12 mb-12">
-            
-            <!-- Section Header -->
-            <div class="space-y-4 px-4">
-                <p class="text-sm text-textMuted font-medium uppercase tracking-wider">Powering Your Vision</p>
-                <h2 class="text-3xl md:text-4xl font-semibold text-white">
-                    My Tech Stack
-                </h2>
-            </div>
-        </div>
-
-        <!-- Horizontal Infinite Scroll Container -->
-        <div class="flex w-max animate-scroll group hover:[animation-play-state:paused]">
-            
-            <!-- ORIGINAL SET OF ICONS -->
-            <div class="flex gap-8 md:gap-12 px-4 md:px-6">
-                
-                <!-- HTML5 -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <i class="fa-brands fa-html5 text-5xl text-gray-400 group-hover/item:text-[#E34F26] transition-colors duration-300"></i>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">HTML5</span>
-                </div>
-
-                <!-- CSS3 -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <i class="fa-brands fa-css3-alt text-5xl text-gray-400 group-hover/item:text-[#1572B6] transition-colors duration-300"></i>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">CSS3</span>
-                </div>
-
-                <!-- JavaScript -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <i class="fa-brands fa-js text-5xl text-gray-400 group-hover/item:text-[#F7DF1E] transition-colors duration-300"></i>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">JavaScript</span>
-                </div>
-
-                <!-- Webflow (User SVG) -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <svg class="w-12 h-12 text-gray-400 group-hover/item:text-[#146EF5] transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 319.382" fill="currentColor">
-                        <path fill="currentColor" d="M512 0L348.627 319.382H195.172l68.375-132.364h-3.071C204.072 260.235 119.911 308.437 0 319.382V188.849s76.71-4.533 121.808-51.945H0V.007h136.897v112.594l3.071-.013L195.91.007h103.535V111.89l3.071-.006L360.557 0H512z"/>
-                    </svg>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">Webflow</span>
-                </div>
-
-                <!-- Figma (User SVG) -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <svg class="w-12 h-12 grayscale opacity-60 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 346 512.36"><g fill-rule="nonzero"><path fill="#00B6FF" d="M172.53 246.9c0-42.04 34.09-76.11 76.12-76.11h11.01c.3.01.63-.01.94-.01 47.16 0 85.4 38.25 85.4 85.4 0 47.15-38.24 85.39-85.4 85.39-.31 0-.64-.01-.95-.01l-11 .01c-42.03 0-76.12-34.09-76.12-76.12V246.9z"/><path fill="#24CB71" d="M0 426.98c0-47.16 38.24-85.41 85.4-85.41l87.13.01v84.52c0 47.65-39.06 86.26-86.71 86.26C38.67 512.36 0 474.13 0 426.98z"/><path fill="#FF7237" d="M172.53.01v170.78h87.13c.3-.01.63.01.94.01 47.16 0 85.4-38.25 85.4-85.4C346 38.24 307.76 0 260.6 0c-.31 0-.64.01-.95.01h-87.12z"/><path fill="#FF3737" d="M0 85.39c0 47.16 38.24 85.4 85.4 85.4h87.13V.01H85.39C38.24.01 0 38.24 0 85.39z"/><path fill="#874FFF" d="M0 256.18c0 47.16 38.24 85.4 85.4 85.4h87.13V170.8H85.39C38.24 170.8 0 209.03 0 256.18z"/></g></svg>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">Figma</span>
-                </div>
-
-                <!-- Java (User SVG) -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <svg class="w-12 h-12 grayscale opacity-60 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-300" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 90.63 122.88" style="enable-background:new 0 0 90.63 122.88" xml:space="preserve"><g><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M29.19,95.03c0,0-4.7,2.73,3.34,3.65c9.74,1.11,14.71,0.95,25.44-1.08c0,0,2.82,1.77,6.76,3.3 C40.68,111.22,10.29,100.31,29.19,95.03L29.19,95.03z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M26.25,81.58c0,0-5.27,3.9,2.78,4.73c10.4,1.07,18.62,1.16,32.83-1.58c0,0,1.97,1.99,5.06,3.08 C37.83,96.32,5.43,88.48,26.25,81.58L26.25,81.58z"/><path fill="#E76F00" fill-rule="evenodd" clip-rule="evenodd" d="M51.03,58.76c5.93,6.82-1.56,12.96-1.56,12.96s15.05-7.77,8.14-17.5C51.15,45.15,46.2,40.64,73,25.1 C73,25.1,30.94,35.6,51.03,58.76L51.03,58.76z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M82.84,104.98c0,0,3.47,2.86-3.83,5.08c-13.88,4.21-57.79,5.48-69.99,0.17c-4.38-1.91,3.84-4.55,6.42-5.11 c2.7-0.59,4.24-0.48,4.24-0.48c-4.88-3.43-31.52,6.74-13.53,9.66C55.2,122.25,95.56,110.72,82.84,104.98L82.84,104.98z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M31.45,67.64c0,0-22.33,5.3-7.91,7.23c6.09,0.82,18.23,0.63,29.54-0.32c9.24-0.78,18.52-2.44,18.52-2.44 s-3.26,1.4-5.62,3.01c-22.68,5.96-66.49,3.19-53.88-2.91C22.77,67.05,31.45,67.64,31.45,67.64L31.45,67.64z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M71.51,90.03c23.05-11.98,12.39-23.49,4.95-21.94c-1.82,0.38-2.64,0.71-2.64,0.71s0.68-1.06,1.97-1.52 c14.72-5.17,26.04,15.26-4.75,23.36C71.05,90.64,71.4,90.32,71.51,90.03L71.51,90.03z"/><path fill="#E76F00" fill-rule="evenodd" clip-rule="evenodd" d="M57.61,0c0,0,12.77,12.77-12.11,32.41c-19.95,15.75-4.55,24.74-0.01,35C33.85,56.91,25.3,47.66,31.03,39.05 C39.45,26.41,62.76,20.29,57.61,0L57.61,0z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M33.71,122.49c22.13,1.42,56.11-0.79,56.92-11.26c0,0-1.55,3.97-18.29,7.12c-18.89,3.55-42.18,3.14-56,0.86 C16.34,119.22,19.17,121.56,33.71,122.49L33.71,122.49z"/></g></svg>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">Java</span>
-                </div>
-
-                <!-- Python (User SVG) -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <svg class="w-12 h-12 grayscale opacity-60 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
-                        <path fill="#0277BD" d="M24.047,5c-1.555,0.005-2.633,0.142-3.936,0.367c-3.848,0.67-4.549,2.077-4.549,4.67V14h9v2H15.22h-4.35c-2.636,0-4.943,1.242-5.674,4.219c-0.826,3.417-0.863,5.557,0,9.125C5.851,32.005,7.294,34,9.931,34h3.632v-5.104c0-2.966,2.686-5.896,5.764-5.896h7.236c2.523,0,5-1.862,5-4.377v-8.586c0-2.439-1.759-4.263-4.218-4.672C27.406,5.359,25.589,4.994,24.047,5z M19.063,9c0.821,0,1.5,0.677,1.5,1.502c0,0.833-0.679,1.498-1.5,1.498c-0.837,0-1.5-0.664-1.5-1.498C17.563,9.68,18.226,9,19.063,9z"></path><path fill="#FFC107" d="M23.078,43c1.555-0.005,2.633-0.142,3.936-0.367c3.848-0.67,4.549-2.077,4.549-4.67V34h-9v-2h9.343h4.35c2.636,0,4.943-1.242,5.674-4.219c0.826-3.417,0.863-5.557,0-9.125C41.274,15.995,39.831,14,37.194,14h-3.632v5.104c0,2.966-2.686,5.896-5.764,5.896h-7.236c-2.523,0-5,1.862-5,4.377v8.586c0,2.439,1.759,4.263,4.218,4.672C19.719,42.641,21.536,43.006,23.078,43z M28.063,39c-0.821,0-1.5-0.677-1.5-1.502c0-0.833,0.679-1.498,1.5-1.498c0.837,0,1.5,0.664,1.5-1.498C29.563,38.32,28.899,39,28.063,39z"></path>
-                    </svg>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">Python</span>
-                </div>
-
-            </div>
-
-            <!-- DUPLICATE SET (For Infinite Loop Effect) -->
-            <div class="flex gap-8 md:gap-12 px-4 md:px-6">
-                
-                <!-- HTML5 -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <i class="fa-brands fa-html5 text-5xl text-gray-400 group-hover/item:text-[#E34F26] transition-colors duration-300"></i>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">HTML5</span>
-                </div>
-
-                <!-- CSS3 -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <i class="fa-brands fa-css3-alt text-5xl text-gray-400 group-hover/item:text-[#1572B6] transition-colors duration-300"></i>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">CSS3</span>
-                </div>
-
-                <!-- JavaScript -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <i class="fa-brands fa-js text-5xl text-gray-400 group-hover/item:text-[#F7DF1E] transition-colors duration-300"></i>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">JavaScript</span>
-                </div>
-
-                <!-- Webflow (User SVG) -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <svg class="w-12 h-12 text-gray-400 group-hover/item:text-[#146EF5] transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 319.382" fill="currentColor">
-                        <path fill="currentColor" d="M512 0L348.627 319.382H195.172l68.375-132.364h-3.071C204.072 260.235 119.911 308.437 0 319.382V188.849s76.71-4.533 121.808-51.945H0V.007h136.897v112.594l3.071-.013L195.91.007h103.535V111.89l3.071-.006L360.557 0H512z"/>
-                    </svg>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">Webflow</span>
-                </div>
-
-                <!-- Figma (User SVG) -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <svg class="w-12 h-12 grayscale opacity-60 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 346 512.36"><g fill-rule="nonzero"><path fill="#00B6FF" d="M172.53 246.9c0-42.04 34.09-76.11 76.12-76.11h11.01c.3.01.63-.01.94-.01 47.16 0 85.4 38.25 85.4 85.4 0 47.15-38.24 85.39-85.4 85.39-.31 0-.64-.01-.95-.01l-11 .01c-42.03 0-76.12-34.09-76.12-76.12V246.9z"/><path fill="#24CB71" d="M0 426.98c0-47.16 38.24-85.41 85.4-85.41l87.13.01v84.52c0 47.65-39.06 86.26-86.71 86.26C38.67 512.36 0 474.13 0 426.98z"/><path fill="#FF7237" d="M172.53.01v170.78h87.13c.3-.01.63.01.94.01 47.16 0 85.4-38.25 85.4-85.4C346 38.24 307.76 0 260.6 0c-.31 0-.64.01-.95.01h-87.12z"/><path fill="#FF3737" d="M0 85.39c0 47.16 38.24 85.4 85.4 85.4h87.13V.01H85.39C38.24.01 0 38.24 0 85.39z"/><path fill="#874FFF" d="M0 256.18c0 47.16 38.24 85.4 85.4 85.4h87.13V170.8H85.39C38.24 170.8 0 209.03 0 256.18z"/></g></svg>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">Figma</span>
-                </div>
-
-                <!-- Java (User SVG) -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <svg class="w-12 h-12 grayscale opacity-60 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-300" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 90.63 122.88" style="enable-background:new 0 0 90.63 122.88" xml:space="preserve"><g><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M29.19,95.03c0,0-4.7,2.73,3.34,3.65c9.74,1.11,14.71,0.95,25.44-1.08c0,0,2.82,1.77,6.76,3.3 C40.68,111.22,10.29,100.31,29.19,95.03L29.19,95.03z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M26.25,81.58c0,0-5.27,3.9,2.78,4.73c10.4,1.07,18.62,1.16,32.83-1.58c0,0,1.97,1.99,5.06,3.08 C37.83,96.32,5.43,88.48,26.25,81.58L26.25,81.58z"/><path fill="#E76F00" fill-rule="evenodd" clip-rule="evenodd" d="M51.03,58.76c5.93,6.82-1.56,12.96-1.56,12.96s15.05-7.77,8.14-17.5C51.15,45.15,46.2,40.64,73,25.1 C73,25.1,30.94,35.6,51.03,58.76L51.03,58.76z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M82.84,104.98c0,0,3.47,2.86-3.83,5.08c-13.88,4.21-57.79,5.48-69.99,0.17c-4.38-1.91,3.84-4.55,6.42-5.11 c2.7-0.59,4.24-0.48,4.24-0.48c-4.88-3.43-31.52,6.74-13.53,9.66C55.2,122.25,95.56,110.72,82.84,104.98L82.84,104.98z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M31.45,67.64c0,0-22.33,5.3-7.91,7.23c6.09,0.82,18.23,0.63,29.54-0.32c9.24-0.78,18.52-2.44,18.52-2.44 s-3.26,1.4-5.62,3.01c-22.68,5.96-66.49,3.19-53.88-2.91C22.77,67.05,31.45,67.64,31.45,67.64L31.45,67.64z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M71.51,90.03c23.05-11.98,12.39-23.49,4.95-21.94c-1.82,0.38-2.64,0.71-2.64,0.71s0.68-1.06,1.97-1.52 c14.72-5.17,26.04,15.26-4.75,23.36C71.05,90.64,71.4,90.32,71.51,90.03L71.51,90.03z"/><path fill="#E76F00" fill-rule="evenodd" clip-rule="evenodd" d="M57.61,0c0,0,12.77,12.77-12.11,32.41c-19.95,15.75-4.55,24.74-0.01,35C33.85,56.91,25.3,47.66,31.03,39.05 C39.45,26.41,62.76,20.29,57.61,0L57.61,0z"/><path fill="#5382A1" fill-rule="evenodd" clip-rule="evenodd" d="M33.71,122.49c22.13,1.42,56.11-0.79,56.92-11.26c0,0-1.55,3.97-18.29,7.12c-18.89,3.55-42.18,3.14-56,0.86 C16.34,119.22,19.17,121.56,33.71,122.49L33.71,122.49z"/></g></svg>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">Java</span>
-                </div>
-
-                <!-- Python (User SVG) -->
-                <div class="group/item flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface/30 border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300 w-32 md:w-40">
-                    <svg class="w-12 h-12 grayscale opacity-60 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-300" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
-                        <path fill="#0277bd" d="M24.047,5c-1.555,0.005-2.633,0.142-3.936,0.367c-3.848,0.67-4.549,2.077-4.549,4.67V14h9v2H15.22  h-4.35c-2.636,0-4.943,1.242-5.674,4.219c-0.826,3.417-0.863,5.557,0-9.125C5.851,32.005,7.294,34,9.931,34h3.632v-5.104  c0-2.966,2.686-5.896,5.764-5.896h7.236c2.523,0,5-1.862,5-4.377v-8.586c0-2.439-1.759-4.263-4.218-4.672 C27.406,5.359,25.589,4.994,24.047,5z M19.063,9c0.821,0,1.5,0.677,1.5,1.502c0,0.833-0.679,1.498-1.5,1.498  c-0.837,0-1.5-0.664-1.5-1.498C17.563,9.68,18.226,9,19.063,9z"></path><path fill="#ffc107" d="M23.078,43c1.555-0.005,2.633-0.142,3.936-0.367c3.848-0.67,4.549-2.077,4.549-4.67V34h-9v-2h9.343  h4.35c2.636,0,4.943-1.242,5.674-4.219c0.826-3.417,0.863-5.557,0-9.125C41.274,15.995,39.831,14,37.194,14h-3.632v5.104  c0,2.966-2.686,5.896-5.764,5.896h-7.236c-2.523,0-5,1.862-5,4.377v8.586c0,2.439,1.759,4.263,4.218,4.672  C19.719,42.641,21.536,43.006,23.078,43z M28.063,39c-0.821,0-1.5-0.677-1.5-1.502c0-0.833,0.679-1.498,1.5-1.498 c0.837,0,1.5,0.664,1.5-1.498C29.563,38.32,28.899,39,28.063,39z"></path>
-                    </svg>
-                    <span class="text-sm font-medium text-textMuted group-hover/item:text-white transition-colors">Python</span>
-                </div>
-
-            </div>
-            
-        </div>
-    </section>
-
-    <!-- PROJECTS SECTION -->
-    <section id="projects" class="w-full py-24 px-4 relative z-10 border-t border-white/5">
-        <div class="max-w-6xl mx-auto">
-            <!-- Header -->
-            <div class="mb-16 text-center md:text-left">
-                <p class="text-sm text-textMuted font-medium uppercase tracking-wider mb-4">Selected Work</p>
-                <h2 class="text-3xl md:text-5xl font-semibold text-white">
-                    Projects
-                </h2>
-            </div>
-
-            <!-- Project Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <!-- Project Card 1 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500">
-                    <!-- Image Container -->
-                    <div class="aspect-[4/3] overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" alt="Project 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <!-- Overlay Gradient -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                        
-                        <!-- Floating Arrow Button -->
-                        <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right text-lg"></i>
-                        </div>
-                    </div>
-
-                    <!-- Content -->
-                    <div class="p-8 absolute bottom-0 left-0 w-full">
-                        <div class="flex flex-wrap gap-2 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Web Design</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Development</span>
-                        </div>
-                        <h3 class="text-2xl font-semibold text-white mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">Digital Experience</h3>
-                        <p class="text-textMuted text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                            A complete overhaul of the digital presence for a leading fintech startup, focusing on user acquisition and trust.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Project Card 2 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500">
-                    <div class="aspect-[4/3] overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=2370&auto=format&fit=crop" alt="Project 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                        <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="p-8 absolute bottom-0 left-0 w-full">
-                        <div class="flex flex-wrap gap-2 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">E-commerce</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Strategy</span>
-                        </div>
-                        <h3 class="text-2xl font-semibold text-white mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">Modern Commerce</h3>
-                        <p class="text-textMuted text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                            Building a scalable, high-performance e-commerce platform for a luxury fashion brand with global reach.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Project Card 3 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500">
-                    <div class="aspect-[4/3] overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                        <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="p-8 absolute bottom-0 left-0 w-full">
-                        <div class="flex flex-wrap gap-2 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Branding</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Webflow</span>
-                        </div>
-                        <h3 class="text-2xl font-semibold text-white mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">Abstract Identity</h3>
-                        <p class="text-textMuted text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                            Crafting a unique visual identity and interactive web experience for a creative design studio.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Project Card 4 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500">
-                    <div class="aspect-[4/3] overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2370&auto=format&fit=crop" alt="Project 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
-                        <div class="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="p-8 absolute bottom-0 left-0 w-full">
-                        <div class="flex flex-wrap gap-2 mb-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">SaaS</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white border border-white/10">Product Design</span>
-                        </div>
-                        <h3 class="text-2xl font-semibold text-white mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">Tech Dashboard</h3>
-                        <p class="text-textMuted text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-                            Designing an intuitive and powerful dashboard interface for a next-generation data analytics platform.
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Simple Footer for Context (Optional) -->
-    <footer class="w-full py-6 text-center text-white/20 text-xs relative z-10">
-        &copy; 2024 Yash Deep. All rights reserved.
-    </footer>
-
-    <script>
-        // Simple Mobile Menu Toggle
-        function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('flex');
+function getWebGLContext(e) {
+    const r = {
+        alpha: true,
+        depth: false,
+        stencil: false,
+        antialias: false,
+        preserveDrawingBuffer: false
+    };
+    let t = e.getContext("webgl2", r);
+    const n = !!t;
+    let i, o;
+    if (!n) {
+        t = e.getContext("webgl", r) || e.getContext("experimental-webgl", r);
+    }
+    if (n) {
+        t.getExtension("EXT_color_buffer_float");
+        o = t.getExtension("OES_texture_float_linear");
+    } else {
+        i = t.getExtension("OES_texture_half_float");
+        o = t.getExtension("OES_texture_half_float_linear");
+    }
+    t.clearColor(1, 1, 1, 1);
+    const a = n ? t.HALF_FLOAT : i.HALF_FLOAT_OES;
+    let l, u, c;
+    if (n) {
+        l = getSupportedFormat(t, t.RGBA16F, t.RGBA, a);
+        u = getSupportedFormat(t, t.RG16F, t.RG, a);
+        c = getSupportedFormat(t, t.R16F, t.RED, a);
+    } else {
+        l = getSupportedFormat(t, t.RGBA, t.RGBA, a);
+        u = getSupportedFormat(t, t.RGBA, t.RGBA, a);
+        c = getSupportedFormat(t, t.RGBA, t.RGBA, a);
+    }
+    return {
+        gl: t,
+        ext: {
+            formatRGBA: l,
+            formatRG: u,
+            formatR: c,
+            halfFloatTexType: a,
+            supportLinearFiltering: o
         }
+    };
+}
 
-        // Cursor Glow Effect
-        const cursorGlow = document.getElementById('cursor-glow');
+function getSupportedFormat(e, r, t, n) {
+    if (!supportRenderTextureFormat(e, r, t, n)) {
+        switch (r) {
+            case e.R16F:
+                return getSupportedFormat(e, e.RG16F, e.RG, n);
+            case e.RG16F:
+                return getSupportedFormat(e, e.RGBA16F, e.RGBA, n);
+            default:
+                return null;
+        }
+    }
+    return {
+        internalFormat: r,
+        format: t
+    };
+}
 
-        // Only run on desktop/large screens to save performance on mobile
-        if (window.matchMedia("(pointer: fine)").matches) {
-            document.addEventListener('mousemove', (e) => {
-                // Update position
-                // Use requestAnimationFrame for smoother performance
-                requestAnimationFrame(() => {
-                    cursorGlow.style.left = e.clientX + 'px';
-                    cursorGlow.style.top = e.clientY + 'px';
-                });
-            });
+function supportRenderTextureFormat(e, r, t, n) {
+    let i = e.createTexture();
+    e.bindTexture(e.TEXTURE_2D, i);
+    e.texParameteri(e.TEXTURE_2D, e.TEXTURE_MIN_FILTER, e.NEAREST);
+    e.texParameteri(e.TEXTURE_2D, e.TEXTURE_MAG_FILTER, e.NEAREST);
+    e.texParameteri(e.TEXTURE_2D, e.TEXTURE_WRAP_S, e.CLAMP_TO_EDGE);
+    e.texParameteri(e.TEXTURE_2D, e.TEXTURE_WRAP_T, e.CLAMP_TO_EDGE);
+    e.texImage2D(e.TEXTURE_2D, 0, r, 4, 4, 0, t, n, null);
+    let o = e.createFramebuffer();
+    e.bindFramebuffer(e.FRAMEBUFFER, o);
+    e.framebufferTexture2D(e.FRAMEBUFFER, e.COLOR_ATTACHMENT0, e.TEXTURE_2D, i, 0);
+    return e.checkFramebufferStatus(e.FRAMEBUFFER) == e.FRAMEBUFFER_COMPLETE;
+}
+
+function isMobile() {
+    return /Mobi|Android/i.test(navigator.userAgent);
+}
+
+function captureScreenshot() {
+    let e = getResolution(config.CAPTURE_RESOLUTION);
+    let r = createFBO(e.width, e.height, ext.formatRGBA.internalFormat, ext.formatRGBA.format, ext.halfFloatTexType, gl.NEAREST);
+    render(r);
+    let t = framebufferToTexture(r);
+    t = normalizeTexture(t, r.width, r.height);
+    let n = textureToCanvas(t, r.width, r.height).toDataURL();
+    downloadURI("fluid.png", n);
+    URL.revokeObjectURL(n);
+}
+
+function framebufferToTexture(e) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, e.fbo);
+    let r = e.width * e.height * 4;
+    let t = new Float32Array(r);
+    gl.readPixels(0, 0, e.width, e.height, gl.RGBA, gl.FLOAT, t);
+    return t;
+}
+
+function normalizeTexture(e, r, t) {
+    let n = new Uint8Array(e.length);
+    let i = 0;
+    for (let o = t - 1; o >= 0; o--) {
+        for (let t = 0; t < r; t++) {
+            let a = o * r * 4 + 4 * t;
+            n[a + 0] = 255 * clamp01(e[i + 0]);
+            n[a + 1] = 255 * clamp01(e[i + 1]);
+            n[a + 2] = 255 * clamp01(e[i + 2]);
+            n[a + 3] = 255 * clamp01(e[i + 3]);
+            i += 4;
+        }
+    }
+    return n;
+}
+
+function clamp01(e) {
+    return Math.min(Math.max(e, 0), 1);
+}
+
+function textureToCanvas(e, r, t) {
+    let n = document.createElement("canvas");
+    let i = n.getContext("2d");
+    n.width = r;
+    n.height = t;
+    let o = i.createImageData(r, t);
+    o.data.set(e);
+    i.putImageData(o, 0, 0);
+    return n;
+}
+
+function downloadURI(e, r) {
+    let t = document.createElement("a");
+    t.download = e;
+    t.href = r;
+    document.body.appendChild(t);
+    t.click();
+    document.body.removeChild(t);
+}
+
+if (isMobile()) {
+    config.DYE_RESOLUTION = 512;
+}
+
+if (!ext.supportLinearFiltering) {
+    config.DYE_RESOLUTION = 512;
+    config.SHADING = false;
+    config.BLOOM = false;
+    config.SUNRAYS = false;
+}
+
+class Material {
+    constructor(e, r) {
+        this.vertexShader = e;
+        this.fragmentShaderSource = r;
+        this.programs = [];
+        this.activeProgram = null;
+        this.uniforms = [];
+    }
+    setKeywords(e) {
+        let r = 0;
+        for (let t = 0; t < e.length; t++) r += hashCode(e[t]);
+        let t = this.programs[r];
+        if (t == null) {
+            let n = compileShader(gl.FRAGMENT_SHADER, this.fragmentShaderSource, e);
+            t = createProgram(this.vertexShader, n);
+            this.programs[r] = t;
+        }
+        if (t != this.activeProgram) {
+            this.uniforms = getUniforms(t);
+            this.activeProgram = t;
+        }
+    }
+    bind() {
+        gl.useProgram(this.activeProgram);
+    }
+}
+
+class Program {
+    constructor(e, r) {
+        this.uniforms = {};
+        this.program = createProgram(e, r);
+        this.uniforms = getUniforms(this.program);
+    }
+    bind() {
+        gl.useProgram(this.program);
+    }
+}
+
+function createProgram(e, r) {
+    let t = gl.createProgram();
+    gl.attachShader(t, e);
+    gl.attachShader(t, r);
+    gl.linkProgram(t);
+    if (!gl.getProgramParameter(t, gl.LINK_STATUS)) {
+        console.trace(gl.getProgramInfoLog(t));
+    }
+    return t;
+}
+
+function getUniforms(e) {
+    let r = [];
+    let t = gl.getProgramParameter(e, gl.ACTIVE_UNIFORMS);
+    for (let n = 0; n < t; n++) {
+        let t = gl.getActiveUniform(e, n).name;
+        r[t] = gl.getUniformLocation(e, t);
+    }
+    return r;
+}
+
+function compileShader(e, r, t) {
+    r = addKeywords(r, t);
+    const n = gl.createShader(e);
+    gl.shaderSource(n, r);
+    gl.compileShader(n);
+    if (!gl.getShaderParameter(n, gl.COMPILE_STATUS)) {
+        console.trace(gl.getShaderInfoLog(n));
+    }
+    return n;
+}
+
+function addKeywords(e, r) {
+    if (r == null) return e;
+    let t = "";
+    r.forEach((e => {
+        t += "#define " + e + "\n";
+    }));
+    return t + e;
+}
+
+const baseVertexShader = compileShader(gl.VERTEX_SHADER, `
+    precision highp float;
+    attribute vec2 aPosition;
+    varying vec2 vUv;
+    varying vec2 vL;
+    varying vec2 vR;
+    varying vec2 vT;
+    varying vec2 vB;
+    uniform vec2 texelSize;
+    void main () {
+        vUv = aPosition * 0.5 + 0.5;
+        vL = vUv - vec2(texelSize.x, 0.0);
+        vR = vUv + vec2(texelSize.x, 0.0);
+        vT = vUv + vec2(0.0, texelSize.y);
+        vB = vUv - vec2(0.0, texelSize.y);
+        gl_Position = vec4(aPosition, 0.0, 1.0);
+    }
+`);
+
+const blurVertexShader = compileShader(gl.VERTEX_SHADER, `
+    precision highp float;
+    attribute vec2 aPosition;
+    varying vec2 vUv;
+    varying vec2 vL;
+    varying vec2 vR;
+    uniform vec2 texelSize;
+    void main () {
+        vUv = aPosition * 0.5 + 0.5;
+        float offset = 1.33333333;
+        vL = vUv - texelSize * offset;
+        vR = vUv + texelSize * offset;
+        gl_Position = vec4(aPosition, 0.0, 1.0);
+    }
+`);
+
+const blurShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying vec2 vUv;
+    varying vec2 vL;
+    varying vec2 vR;
+    uniform sampler2D uTexture;
+    void main () {
+        vec4 sum = texture2D(uTexture, vUv) * 0.29411764;
+        sum += texture2D(uTexture, vL) * 0.35294117;
+        sum += texture2D(uTexture, vR) * 0.35294117;
+        gl_FragColor = sum;
+    }
+`);
+
+const copyShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying highp vec2 vUv;
+    uniform sampler2D uTexture;
+    void main () {
+        gl_FragColor = texture2D(uTexture, vUv);
+    }
+`);
+
+const clearShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying highp vec2 vUv;
+    uniform sampler2D uTexture;
+    uniform float value;
+    void main () {
+        gl_FragColor = value * texture2D(uTexture, vUv);
+    }
+`);
+
+const colorShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    uniform vec4 color;
+    void main () {
+        gl_FragColor = color;
+    }
+`);
+
+const checkerboardShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision highp float;
+    precision highp sampler2D;
+    varying vec2 vUv;
+    uniform sampler2D uTexture;
+    uniform float aspectRatio;
+    #define SCALE 25.0
+    void main () {
+        vec2 uv = floor(vUv * SCALE * vec2(aspectRatio, 1.0));
+        float v = mod(uv.x + uv.y, 2.0);
+        v = v * 0.1 + 0.8;
+        gl_FragColor = vec4(vec3(v), 1.0);
+    }
+`);
+
+const displayShaderSource = `
+    precision highp float;
+    precision highp sampler2D;
+    varying vec2 vUv;
+    varying vec2 vL;
+    varying vec2 vR;
+    varying vec2 vT;
+    varying vec2 vB;
+    uniform sampler2D uTexture;
+    uniform sampler2D uBloom;
+    uniform sampler2D uSunrays;
+    uniform sampler2D uDithering;
+    uniform vec2 ditherScale;
+    uniform vec2 texelSize;
+    vec3 linearToGamma (vec3 color) {
+        color = max(color, vec3(0));
+        return max(1.055 * pow(color, vec3(0.416666667)) - 0.055, vec3(0));
+    }
+    void main () {
+        vec3 c = texture2D(uTexture, vUv).rgb;
+    #ifdef SHADING
+        vec3 lc = texture2D(uTexture, vL).rgb;
+        vec3 rc = texture2D(uTexture, vR).rgb;
+        vec3 tc = texture2D(uTexture, vT).rgb;
+        vec3 bc = texture2D(uTexture, vB).rgb;
+        float dx = length(rc) - length(lc);
+        float dy = length(tc) - length(bc);
+        vec3 n = normalize(vec3(dx, dy, length(texelSize)));
+        vec3 l = vec3(0.0, 0.0, 1.0);
+        float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0);
+        c *= diffuse;
+    #endif
+    #ifdef BLOOM
+        vec3 bloom = texture2D(uBloom, vUv).rgb;
+    #endif
+    #ifdef SUNRAYS
+        float sunrays = texture2D(uSunrays, vUv).r;
+        c *= sunrays;
+    #ifdef BLOOM
+        bloom *= sunrays;
+    #endif
+    #endif
+    #ifdef BLOOM
+        float noise = texture2D(uDithering, vUv * ditherScale).r;
+        noise = noise * 2.0 - 1.0;
+        bloom += noise / 255.0;
+        bloom = linearToGamma(bloom);
+        c += bloom;
+    #endif
+        float a = max(c.r, max(c.g, c.b));
+        gl_FragColor = vec4(c, a);
+    }
+`;
+
+const bloomPrefilterShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying vec2 vUv;
+    uniform sampler2D uTexture;
+    uniform vec3 curve;
+    uniform float threshold;
+    void main () {
+        vec3 c = texture2D(uTexture, vUv).rgb;
+        float br = max(c.r, max(c.g, c.b));
+        float rq = clamp(br - curve.x, 0.0, curve.y);
+        rq = curve.z * rq * rq;
+        c *= max(rq, br - threshold) / max(br, 0.0001);
+        gl_FragColor = vec4(c, 0.0);
+    }
+`);
+
+const bloomBlurShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying vec2 vL;
+    varying vec2 vR;
+    varying vec2 vT;
+    varying vec2 vB;
+    uniform sampler2D uTexture;
+    void main () {
+        vec4 sum = vec4(0.0);
+        sum += texture2D(uTexture, vL);
+        sum += texture2D(uTexture, vR);
+        sum += texture2D(uTexture, vT);
+        sum += texture2D(uTexture, vB);
+        sum *= 0.25;
+        gl_FragColor = sum;
+    }
+`);
+
+const bloomFinalShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying vec2 vL;
+    varying vec2 vR;
+    varying vec2 vT;
+    varying vec2 vB;
+    uniform sampler2D uTexture;
+    uniform float intensity;
+    void main () {
+        vec4 sum = vec4(0.0);
+        sum += texture2D(uTexture, vL);
+        sum += texture2D(uTexture, vR);
+        sum += texture2D(uTexture, vT);
+        sum += texture2D(uTexture, vB);
+        sum *= 0.25;
+        gl_FragColor = sum * intensity;
+    }
+`);
+
+const sunraysMaskShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision highp float;
+    precision highp sampler2D;
+    varying vec2 vUv;
+    uniform sampler2D uTexture;
+    void main () {
+        vec4 c = texture2D(uTexture, vUv);
+        float br = max(c.r, max(c.g, c.b));
+        c.a = 1.0 - min(max(br * 20.0, 0.0), 0.8);
+        gl_FragColor = c;
+    }
+`);
+
+const sunraysShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision highp float;
+    precision highp sampler2D;
+    varying vec2 vUv;
+    uniform sampler2D uTexture;
+    uniform float weight;
+    #define ITERATIONS 16
+    void main () {
+        float Density = 0.3;
+        float Decay = 0.95;
+        float Exposure = 0.7;
+        vec2 coord = vUv;
+        vec2 dir = vUv - 0.5;
+        dir *= 1.0 / float(ITERATIONS) * Density;
+        float illuminationDecay = 1.0;
+        float color = texture2D(uTexture, vUv).a;
+        for (int i = 0; i < ITERATIONS; i++) {
+            coord -= dir;
+            float col = texture2D(uTexture, coord).a;
+            color += col * illuminationDecay * weight;
+            illuminationDecay *= Decay;
+        }
+        gl_FragColor = vec4(color * Exposure, 0.0, 0.0, 1.0);
+    }
+`);
+
+const splatShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision highp float;
+    precision highp sampler2D;
+    varying vec2 vUv;
+    uniform sampler2D uTarget;
+    uniform float aspectRatio;
+    uniform vec3 color;
+    uniform vec2 point;
+    uniform float radius;
+    void main () {
+        vec2 p = vUv - point.xy;
+        p.x *= aspectRatio;
+        vec3 splat = exp(-dot(p, p) / radius) * color;
+        vec3 base = texture2D(uTarget, vUv).xyz;
+        gl_FragColor = vec4(base + splat, 1.0);
+    }
+`);
+
+const advectionShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision highp float;
+    precision highp sampler2D;
+    varying vec2 vUv;
+    uniform sampler2D uVelocity;
+    uniform sampler2D uSource;
+    uniform vec2 texelSize;
+    uniform vec2 dyeTexelSize;
+    uniform float dt;
+    uniform float dissipation;
+    vec4 bilerp (sampler2D sam, vec2 uv, vec2 tsize) {
+        vec2 st = uv / tsize - 0.5;
+        vec2 iuv = floor(st);
+        vec2 fuv = fract(st);
+        vec4 a = texture2D(sam, (iuv + vec2(0.5, 0.5)) * tsize);
+        vec4 b = texture2D(sam, (iuv + vec2(1.5, 0.5)) * tsize);
+        vec4 c = texture2D(sam, (iuv + vec2(0.5, 1.5)) * tsize);
+        vec4 d = texture2D(sam, (iuv + vec2(1.5, 1.5)) * tsize);
+        return mix(mix(a, b, fuv.x), mix(c, d, fuv.x), fuv.y);
+    }
+    void main () {
+    #ifdef MANUAL_FILTERING
+        vec2 coord = vUv - dt * bilerp(uVelocity, vUv, texelSize).xy * texelSize;
+        vec4 result = bilerp(uSource, coord, dyeTexelSize);
+    #else
+        vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize;
+        vec4 result = texture2D(uSource, coord);
+    #endif
+        float decay = 1.0 + dissipation * dt;
+        gl_FragColor = result / decay;
+    }
+`, ext.supportLinearFiltering ? null : ["MANUAL_FILTERING"]);
+
+const divergenceShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying highp vec2 vUv;
+    varying highp vec2 vL;
+    varying highp vec2 vR;
+    varying highp vec2 vT;
+    varying highp vec2 vB;
+    uniform sampler2D uVelocity;
+    void main () {
+        float L = texture2D(uVelocity, vL).x;
+        float R = texture2D(uVelocity, vR).x;
+        float T = texture2D(uVelocity, vT).y;
+        float B = texture2D(uVelocity, vB).y;
+        vec2 C = texture2D(uVelocity, vUv).xy;
+        if (vL.x < 0.0) { L = -C.x; }
+        if (vR.x > 1.0) { R = -C.x; }
+        if (vT.y > 1.0) { T = -C.y; }
+        if (vB.y < 0.0) { B = -C.y; }
+        float div = 0.5 * (R - L + T - B);
+        gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
+    }
+`);
+
+const curlShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying highp vec2 vUv;
+    varying highp vec2 vL;
+    varying highp vec2 vR;
+    varying highp vec2 vT;
+    varying highp vec2 vB;
+    uniform sampler2D uVelocity;
+    void main () {
+        float L = texture2D(uVelocity, vL).y;
+        float R = texture2D(uVelocity, vR).y;
+        float T = texture2D(uVelocity, vT).x;
+        float B = texture2D(uVelocity, vB).x;
+        float vorticity = R - L - T + B;
+        gl_FragColor = vec4(0.5 * vorticity, 0.0, 0.0, 1.0);
+    }
+`);
+
+const vorticityShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision highp float;
+    precision highp sampler2D;
+    varying vec2 vUv;
+    varying vec2 vL;
+    varying vec2 vR;
+    varying vec2 vT;
+    varying vec2 vB;
+    uniform sampler2D uVelocity;
+    uniform sampler2D uCurl;
+    uniform float curl;
+    uniform float dt;
+    void main () {
+        float L = texture2D(uCurl, vL).x;
+        float R = texture2D(uCurl, vR).x;
+        float T = texture2D(uCurl, vT).x;
+        float B = texture2D(uCurl, vB).x;
+        float C = texture2D(uCurl, vUv).x;
+        vec2 force = 0.5 * vec2(abs(T) - abs(B), abs(R) - abs(L));
+        force /= length(force) + 0.0001;
+        force *= curl * C;
+        force.y *= -1.0;
+        vec2 velocity = texture2D(uVelocity, vUv).xy;
+        velocity += force * dt;
+        velocity = min(max(velocity, -1000.0), 1000.0);
+        gl_FragColor = vec4(velocity, 0.0, 1.0);
+    }
+`);
+
+const pressureShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying highp vec2 vUv;
+    varying highp vec2 vL;
+    varying highp vec2 vR;
+    varying highp vec2 vT;
+    varying highp vec2 vB;
+    uniform sampler2D uPressure;
+    uniform sampler2D uDivergence;
+    void main () {
+        float L = texture2D(uPressure, vL).x;
+        float R = texture2D(uPressure, vR).x;
+        float T = texture2D(uPressure, vT).x;
+        float B = texture2D(uPressure, vB).x;
+        float C = texture2D(uPressure, vUv).x;
+        float divergence = texture2D(uDivergence, vUv).x;
+        float pressure = (L + R + B + T - divergence) * 0.25;
+        gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
+    }
+`);
+
+const gradientSubtractShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    precision mediump sampler2D;
+    varying highp vec2 vUv;
+    varying highp vec2 vL;
+    varying highp vec2 vR;
+    varying highp vec2 vT;
+    varying highp vec2 vB;
+    uniform sampler2D uPressure;
+    uniform sampler2D uVelocity;
+    void main () {
+        float L = texture2D(uPressure, vL).x;
+        float R = texture2D(uPressure, vR).x;
+        float T = texture2D(uPressure, vT).x;
+        float B = texture2D(uPressure, vB).x;
+        vec2 velocity = texture2D(uVelocity, vUv).xy;
+        velocity.xy -= vec2(R - L, T - B);
+        gl_FragColor = vec4(velocity, 0.0, 1.0);
+    }
+`);
+
+const blit = (() => {
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(0);
+
+    return (e, r = false) => {
+        if (e == null) {
+            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         } else {
-            // Center it or hide it on touch devices
-            cursorGlow.style.display = 'none';
+            gl.viewport(0, 0, e.width, e.height);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, e.fbo);
         }
-    </script>
+        if (r) {
+            gl.clearColor(1, 1, 1, 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+        gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+    };
+})();
+
+function CHECK_FRAMEBUFFER_STATUS() {
+    let e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    if (e != gl.FRAMEBUFFER_COMPLETE) {
+        console.trace("Framebuffer error: " + e);
+    }
+}
+
+let dye, velocity, divergence, curl, pressure, bloom, sunrays, sunraysTemp;
+let bloomFramebuffers = [];
+let ditheringTexture = createTextureAsync("LDR_LLL1_0.png");
+
+const blurProgram = new Program(blurVertexShader, blurShader);
+const copyProgram = new Program(baseVertexShader, copyShader);
+const clearProgram = new Program(baseVertexShader, clearShader);
+const colorProgram = new Program(baseVertexShader, colorShader);
+const checkerboardProgram = new Program(baseVertexShader, checkerboardShader);
+const bloomPrefilterProgram = new Program(baseVertexShader, bloomPrefilterShader);
+const bloomBlurProgram = new Program(baseVertexShader, bloomBlurShader);
+const bloomFinalProgram = new Program(baseVertexShader, bloomFinalShader);
+const sunraysMaskProgram = new Program(baseVertexShader, sunraysMaskShader);
+const sunraysProgram = new Program(baseVertexShader, sunraysShader);
+const splatProgram = new Program(baseVertexShader, splatShader);
+const advectionProgram = new Program(baseVertexShader, advectionShader);
+const divergenceProgram = new Program(baseVertexShader, divergenceShader);
+const curlProgram = new Program(baseVertexShader, curlShader);
+const vorticityProgram = new Program(baseVertexShader, vorticityShader);
+const pressureProgram = new Program(baseVertexShader, pressureShader);
+const gradienSubtractProgram = new Program(baseVertexShader, gradientSubtractShader);
+const displayMaterial = new Material(baseVertexShader, displayShaderSource);
+
+function initFramebuffers() {
+    let e = getResolution(config.SIM_RESOLUTION);
+    let r = getResolution(config.DYE_RESOLUTION);
+    const t = ext.halfFloatTexType;
+    const n = ext.formatRGBA;
+    const i = ext.formatRG;
+    const o = ext.formatR;
+    const a = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
+
+    gl.disable(gl.BLEND);
+
+    dye = dye == null ? createDoubleFBO(r.width, r.height, n.internalFormat, n.format, t, a) : resizeDoubleFBO(dye, r.width, r.height, n.internalFormat, n.format, t, a);
+    velocity = velocity == null ? createDoubleFBO(e.width, e.height, i.internalFormat, i.format, t, a) : resizeDoubleFBO(velocity, e.width, e.height, i.internalFormat, i.format, t, a);
+    divergence = createFBO(e.width, e.height, o.internalFormat, o.format, t, gl.NEAREST);
+    curl = createFBO(e.width, e.height, o.internalFormat, o.format, t, gl.NEAREST);
+    pressure = createDoubleFBO(e.width, e.height, o.internalFormat, o.format, t, gl.NEAREST);
+
+    initBloomFramebuffers();
+    initSunraysFramebuffers();
+}
+
+function initBloomFramebuffers() {
+    let e = getResolution(config.BLOOM_RESOLUTION);
+    const r = ext.halfFloatTexType;
+    const t = ext.formatRGBA;
+    const n = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
+    bloom = createFBO(e.width, e.height, t.internalFormat, t.format, r, n);
+    bloomFramebuffers.length = 0;
+    for (let i = 0; i < config.BLOOM_ITERATIONS; i++) {
+        let o = e.width >> i + 1;
+        let a = e.height >> i + 1;
+        if (o < 2 || a < 2) break;
+        let l = createFBO(o, a, t.internalFormat, t.format, r, n);
+        bloomFramebuffers.push(l);
+    }
+}
+
+function initSunraysFramebuffers() {
+    let e = getResolution(config.SUNRAYS_RESOLUTION);
+    const r = ext.halfFloatTexType;
+    const t = ext.formatR;
+    const n = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
+    sunrays = createFBO(e.width, e.height, t.internalFormat, t.format, r, n);
+    sunraysTemp = createFBO(e.width, e.height, t.internalFormat, t.format, r, n);
+}
+
+function createFBO(e, r, t, n, i, o) {
+    gl.activeTexture(gl.TEXTURE0);
+    let a = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, a);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, o);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, o);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, t, e, r, 0, n, i, null);
+    let l = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, l);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, a, 0);
+    gl.viewport(0, 0, e, r);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    return {
+        texture: a,
+        fbo: l,
+        width: e,
+        height: r,
+        texelSizeX: 1 / e,
+        texelSizeY: 1 / r,
+        attach: e => {
+            gl.activeTexture(gl.TEXTURE0 + e);
+            gl.bindTexture(gl.TEXTURE_2D, a);
+            return e;
+        }
+    };
+}
+
+function createDoubleFBO(e, r, t, n, i, o) {
+    let a = createFBO(e, r, t, n, i, o);
+    let l = createFBO(e, r, t, n, i, o);
+    return {
+        width: e,
+        height: r,
+        texelSizeX: a.texelSizeX,
+        texelSizeY: a.texelSizeY,
+        get read() {
+            return a;
+        },
+        set read(e) {
+            a = e;
+        },
+        get write() {
+            return l;
+        },
+        set write(e) {
+            l = e;
+        },
+        swap() {
+            let e = a;
+            a = l;
+            l = e;
+        }
+    };
+}
+
+function resizeFBO(e, r, t, n, i, o, a) {
+    let l = createFBO(r, t, n, i, o, a);
+    copyProgram.bind();
+    gl.uniform1i(copyProgram.uniforms.uTexture, e.attach(0));
+    blit(l);
+    return l;
+}
+
+function resizeDoubleFBO(e, r, t, n, i, o, a) {
+    if (e.width == r && e.height == t) return e;
+    e.read = resizeFBO(e.read, r, t, n, i, o, a);
+    e.write = createFBO(r, t, n, i, o, a);
+    e.width = r;
+    e.height = t;
+    e.texelSizeX = 1 / r;
+    e.texelSizeY = 1 / t;
+    return e;
+}
+
+function createTextureAsync(e) {
+    let r = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, r);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255]));
+    let t = {
+        texture: r,
+        width: 1,
+        height: 1,
+        attach: e => {
+            gl.activeTexture(gl.TEXTURE0 + e);
+            gl.bindTexture(gl.TEXTURE_2D, r);
+            return e;
+        }
+    };
+    let n = new Image();
+    n.onload = () => {
+        t.width = n.width;
+        t.height = n.height;
+        gl.bindTexture(gl.TEXTURE_2D, r);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, n);
+    };
+    n.src = e;
+    return t;
+}
+
+function updateKeywords() {
+    let e = [];
+    if (config.SHADING) e.push("SHADING");
+    if (config.BLOOM) e.push("BLOOM");
+    if (config.SUNRAYS) e.push("SUNRAYS");
+    displayMaterial.setKeywords(e);
+}
+
+updateKeywords();
+initFramebuffers();
+multipleSplats(parseInt(20 * Math.random()) + 5);
+
+let lastUpdateTime = Date.now();
+let colorUpdateTimer = 0;
+
+function update() {
+    const e = calcDeltaTime();
+    if (resizeCanvas()) initFramebuffers();
+    updateColors(e);
+    applyInputs();
+    if (!config.PAUSED) step(e);
+    render(null);
+    requestAnimationFrame(update);
+}
+
+function calcDeltaTime() {
+    let e = Date.now();
+    let r = (e - lastUpdateTime) / 1000;
+    r = Math.min(r, 0.016666);
+    lastUpdateTime = e;
+    return r;
+}
+
+function resizeCanvas() {
+    let e = scaleByPixelRatio(canvas.clientWidth);
+    let r = scaleByPixelRatio(canvas.clientHeight);
+    if (canvas.width != e || canvas.height != r) {
+        canvas.width = e;
+        canvas.height = r;
+        return true;
+    }
+    return false;
+}
+
+function updateColors(e) {
+    if (!config.COLORFUL) return;
+    colorUpdateTimer += e * config.COLOR_UPDATE_SPEED;
+    if (colorUpdateTimer >= 1) {
+        colorUpdateTimer = wrap(colorUpdateTimer, 0, 1);
+        pointers.forEach((e => {
+            e.color = generateColor();
+        }));
+    }
+}
+
+function applyInputs() {
+    if (splatStack.length > 0) multipleSplats(splatStack.pop());
+    pointers.forEach((e => {
+        if (e.moved) {
+            e.moved = false;
+            splatPointer(e);
+        }
+    }));
+}
+
+function step(e) {
+    gl.disable(gl.BLEND);
+    
+    // Curl
+    curlProgram.bind();
+    gl.uniform2f(curlProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0));
+    blit(curl);
+
+    // Vorticity
+    vorticityProgram.bind();
+    gl.uniform2f(vorticityProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(vorticityProgram.uniforms.uVelocity, velocity.read.attach(0));
+    gl.uniform1i(vorticityProgram.uniforms.uCurl, curl.attach(1));
+    gl.uniform1f(vorticityProgram.uniforms.curl, config.CURL);
+    gl.uniform1f(vorticityProgram.uniforms.dt, e);
+    blit(velocity.write);
+    velocity.swap();
+
+    // Divergence
+    divergenceProgram.bind();
+    gl.uniform2f(divergenceProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(divergenceProgram.uniforms.uVelocity, velocity.read.attach(0));
+    blit(divergence);
+
+    // Clear
+    clearProgram.bind();
+    gl.uniform1i(clearProgram.uniforms.uTexture, pressure.read.attach(0));
+    gl.uniform1f(clearProgram.uniforms.value, config.PRESSURE);
+    blit(pressure.write);
+    pressure.swap();
+
+    // Pressure
+    pressureProgram.bind();
+    gl.uniform2f(pressureProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(pressureProgram.uniforms.uDivergence, divergence.attach(0));
+    for (let e = 0; e < config.PRESSURE_ITERATIONS; e++) {
+        gl.uniform1i(pressureProgram.uniforms.uPressure, pressure.read.attach(1));
+        blit(pressure.write);
+        pressure.swap();
+    }
+
+    // Gradient Subtract
+    gradienSubtractProgram.bind();
+    gl.uniform2f(gradienSubtractProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(gradienSubtractProgram.uniforms.uPressure, pressure.read.attach(0));
+    gl.uniform1i(gradienSubtractProgram.uniforms.uVelocity, velocity.read.attach(1));
+    blit(velocity.write);
+    velocity.swap();
+
+    // Advection Velocity
+    advectionProgram.bind();
+    gl.uniform2f(advectionProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    if (!ext.supportLinearFiltering) gl.uniform2f(advectionProgram.uniforms.dyeTexelSize, velocity.texelSizeX, velocity.texelSizeY);
+    let r = velocity.read.attach(0);
+    gl.uniform1i(advectionProgram.uniforms.uVelocity, r);
+    gl.uniform1i(advectionProgram.uniforms.uSource, r);
+    gl.uniform1f(advectionProgram.uniforms.dt, e);
+    gl.uniform1f(advectionProgram.uniforms.dissipation, config.VELOCITY_DISSIPATION);
+    blit(velocity.write);
+    velocity.swap();
+
+    // Advection Dye
+    if (!ext.supportLinearFiltering) gl.uniform2f(advectionProgram.uniforms.dyeTexelSize, dye.texelSizeX, dye.texelSizeY);
+    gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read.attach(0));
+    gl.uniform1i(advectionProgram.uniforms.uSource, dye.read.attach(1));
+    gl.uniform1f(advectionProgram.uniforms.dissipation, config.DENSITY_DISSIPATION);
+    blit(dye.write);
+    dye.swap();
+}
+
+function render(e) {
+    if (config.BLOOM) applyBloom(dye.read, bloom);
+    if (config.SUNRAYS) {
+        applySunrays(dye.read, dye.write, sunrays);
+        blur(sunrays, sunraysTemp, 1);
+    }
+    if (e != null && config.TRANSPARENT) {
+        gl.disable(gl.BLEND);
+    } else {
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        gl.enable(gl.BLEND);
+    }
+    if (!config.TRANSPARENT) drawColor(e, normalizeColor(config.BACK_COLOR));
+    if (e == null && config.TRANSPARENT) drawCheckerboard(e);
+    drawDisplay(e);
+}
+
+function drawColor(e, r) {
+    colorProgram.bind();
+    gl.uniform4f(colorProgram.uniforms.color, r.r, r.g, r.b, 1);
+    blit(e);
+}
+
+function drawCheckerboard(e) {
+    checkerboardProgram.bind();
+    gl.uniform1f(checkerboardProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    blit(e);
+}
+
+function drawDisplay(e) {
+    let r = e == null ? gl.drawingBufferWidth : e.width;
+    let t = e == null ? gl.drawingBufferHeight : e.height;
+    displayMaterial.bind();
+    if (config.SHADING) gl.uniform2f(displayMaterial.uniforms.texelSize, 1 / r, 1 / t);
+    gl.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0));
+    if (config.BLOOM) {
+        gl.uniform1i(displayMaterial.uniforms.uBloom, bloom.attach(1));
+        gl.uniform1i(displayMaterial.uniforms.uDithering, ditheringTexture.attach(2));
+        let e = getTextureScale(ditheringTexture, r, t);
+        gl.uniform2f(displayMaterial.uniforms.ditherScale, e.x, e.y);
+    }
+    if (config.SUNRAYS) gl.uniform1i(displayMaterial.uniforms.uSunrays, sunrays.attach(3));
+    blit(e);
+}
+
+function applyBloom(e, r) {
+    if (bloomFramebuffers.length < 2) return;
+    let t = r;
+    gl.disable(gl.BLEND);
+    bloomPrefilterProgram.bind();
+    let n = config.BLOOM_THRESHOLD * config.BLOOM_SOFT_KNEE + 0.0001;
+    let i = config.BLOOM_THRESHOLD - n;
+    let o = 2 * n;
+    let a = 0.25 / n;
+    gl.uniform3f(bloomPrefilterProgram.uniforms.curve, i, o, a);
+    gl.uniform1f(bloomPrefilterProgram.uniforms.threshold, config.BLOOM_THRESHOLD);
+    gl.uniform1i(bloomPrefilterProgram.uniforms.uTexture, e.attach(0));
+    blit(t);
+    bloomBlurProgram.bind();
+    for (let e = 0; e < bloomFramebuffers.length; e++) {
+        let r = bloomFramebuffers[e];
+        gl.uniform2f(bloomBlurProgram.uniforms.texelSize, t.texelSizeX, t.texelSizeY);
+        gl.uniform1i(bloomBlurProgram.uniforms.uTexture, t.attach(0));
+        blit(r);
+        t = r;
+    }
+    gl.blendFunc(gl.ONE, gl.ONE);
+    gl.enable(gl.BLEND);
+    for (let e = bloomFramebuffers.length - 2; e >= 0; e--) {
+        let r = bloomFramebuffers[e];
+        gl.uniform2f(bloomBlurProgram.uniforms.texelSize, t.texelSizeX, t.texelSizeY);
+        gl.uniform1i(bloomBlurProgram.uniforms.uTexture, t.attach(0));
+        gl.viewport(0, 0, r.width, r.height);
+        blit(r);
+        t = r;
+    }
+    gl.disable(gl.BLEND);
+    bloomFinalProgram.bind();
+    gl.uniform2f(bloomFinalProgram.uniforms.texelSize, t.texelSizeX, t.texelSizeY);
+    gl.uniform1i(bloomFinalProgram.uniforms.uTexture, t.attach(0));
+    gl.uniform1f(bloomFinalProgram.uniforms.intensity, config.BLOOM_INTENSITY);
+    blit(r);
+}
+
+function applySunrays(e, r, t) {
+    gl.disable(gl.BLEND);
+    sunraysMaskProgram.bind();
+    gl.uniform1i(sunraysMaskProgram.uniforms.uTexture, e.attach(0));
+    blit(r);
+    sunraysProgram.bind();
+    gl.uniform1f(sunraysProgram.uniforms.weight, config.SUNRAYS_WEIGHT);
+    gl.uniform1i(sunraysProgram.uniforms.uTexture, r.attach(0));
+    blit(t);
+}
+
+function blur(e, r, t) {
+    blurProgram.bind();
+    for (let n = 0; n < t; n++) {
+        gl.uniform2f(blurProgram.uniforms.texelSize, e.texelSizeX, 0);
+        gl.uniform1i(blurProgram.uniforms.uTexture, e.attach(0));
+        blit(r);
+        gl.uniform2f(blurProgram.uniforms.texelSize, 0, e.texelSizeY);
+        gl.uniform1i(blurProgram.uniforms.uTexture, r.attach(0));
+        blit(e);
+    }
+}
+
+function splatPointer(e) {
+    let r = e.deltaX * config.SPLAT_FORCE;
+    let t = e.deltaY * config.SPLAT_FORCE;
+    splat(e.texcoordX, e.texcoordY, r, t, e.color);
+}
+
+function multipleSplats(e) {
+    for (let r = 0; r < e; r++) {
+        const e = generateColor();
+        e.r *= 10;
+        e.g *= 10;
+        e.b *= 10;
+        splat(Math.random(), Math.random(), 1000 * (Math.random() - 0.5), 1000 * (Math.random() - 0.5), e);
+    }
+}
+
+function splat(e, r, t, n, i) {
+    splatProgram.bind();
+    gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
+    gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+    if (window.innerWidth <= 768) {
+        gl.uniform2f(splatProgram.uniforms.point, e, Math.abs(r + window.scrollY / window.innerHeight) % 1);
+    } else {
+        gl.uniform2f(splatProgram.uniforms.point, e, r);
+    }
+    gl.uniform3f(splatProgram.uniforms.color, t, n, 0);
+    gl.uniform1f(splatProgram.uniforms.radius, correctRadius(config.SPLAT_RADIUS / 100));
+    blit(velocity.write);
+    velocity.swap();
+    gl.uniform1i(splatProgram.uniforms.uTarget, dye.read.attach(0));
+    gl.uniform3f(splatProgram.uniforms.color, i.r, i.g, i.b);
+    blit(dye.write);
+    dye.swap();
+}
+
+function correctRadius(e) {
+    let r = canvas.width / canvas.height;
+    if (r > 1) e *= r;
+    return e;
+}
+
+function updatePointerDownData(e, r, t, n) {
+    e.id = r;
+    e.down = true;
+    e.moved = false;
+    e.texcoordX = t / canvas.width;
+    e.texcoordY = 1 - n / canvas.height;
+    e.prevTexcoordX = e.texcoordX;
+    e.prevTexcoordY = e.texcoordY;
+    e.deltaX = 0;
+    e.deltaY = 0;
+    e.color = generateColor();
+}
+
+function updatePointerMoveData(e, r, t) {
+    e.prevTexcoordX = e.texcoordX;
+    e.prevTexcoordY = e.texcoordY;
+    e.texcoordX = r / canvas.width;
+    e.texcoordY = 1 - t / canvas.height;
+    e.deltaX = correctDeltaX(e.texcoordX - e.prevTexcoordX);
+    e.deltaY = correctDeltaY(e.texcoordY - e.prevTexcoordY);
+    e.moved = Math.abs(e.deltaX) > 0 || Math.abs(e.deltaY) > 0;
+}
+
+function updatePointerUpData(e) {
+    e.down = false;
+}
+
+function correctDeltaX(e) {
+    let r = canvas.width / canvas.height;
+    if (r < 1) e *= r;
+    return e;
+}
+
+function correctDeltaY(e) {
+    let r = canvas.width / canvas.height;
+    if (r > 1) e /= r;
+    return e;
+}
+
+function generateColor() {
+    let e = HSVtoRGB(Math.random(), 1.0, 1.0);
+    e.r *= 0.15;
+    e.g *= 0.15;
+    e.b *= 0.15;
+    return e;
+}
+
+function HSVtoRGB(e, r, t) {
+    let n, i, o, a, l, u, c, g;
+    a = Math.floor(6 * e);
+    l = 6 * e - a;
+    u = t * (1 - r);
+    c = t * (1 - l * r);
+    g = t * (1 - (1 - l) * r);
+    switch (a % 6) {
+        case 0:
+            n = t;
+            i = g;
+            o = u;
+            break;
+        case 1:
+            n = c;
+            i = t;
+            o = u;
+            break;
+        case 2:
+            n = u;
+            i = t;
+            o = g;
+            break;
+        case 3:
+            n = u;
+            i = c;
+            o = t;
+            break;
+        case 4:
+            n = g;
+            i = u;
+            o = t;
+            break;
+        case 5:
+            n = t;
+            i = u;
+            o = c;
+            break;
+    }
+    return {
+        r: n,
+        g: i,
+        b: o
+    };
+}
+
+function normalizeColor(e) {
+    return {
+        r: e.r / 255,
+        g: e.g / 255,
+        b: e.b / 255
+    };
+}
+
+function wrap(e, r, t) {
+    let n = t - r;
+    if (n == 0) return r;
+    return (e - r) % n + r;
+}
+
+function getResolution(e) {
+    let r = gl.drawingBufferWidth / gl.drawingBufferHeight;
+    if (r < 1) r = 1 / r;
+    let t = Math.round(e);
+    let n = Math.round(e * r);
+    return gl.drawingBufferWidth > gl.drawingBufferHeight ? {
+        width: n,
+        height: t
+    } : {
+        width: t,
+        height: n
+    };
+}
+
+function getTextureScale(e, r, t) {
+    return {
+        x: r / e.width,
+        y: t / e.height
+    };
+}
+
+function scaleByPixelRatio(e) {
+    let r = window.devicePixelRatio || 1;
+    return Math.floor(e * r);
+}
+
+function hashCode(e) {
+    if (e.length == 0) return 0;
+    let r = 0;
+    for (let t = 0; t < e.length; t++) {
+        r = (r << 5) - r + e.charCodeAt(t);
+        r |= 0;
+    }
+    return r;
+}
+
+update();
+
+homePageBody.addEventListener("mouseover", (e => {
+    let r = scaleByPixelRatio(e.clientX);
+    let t = scaleByPixelRatio(e.clientY);
+    let n = pointers.find((e => -1 == e.id));
+    if (n == null) n = new pointerPrototype();
+    updatePointerDownData(n, -1, r, t);
+}));
+
+homePageBody.addEventListener("mousemove", (e => {
+    let r = pointers[0];
+    if (r.down) updatePointerMoveData(r, scaleByPixelRatio(e.clientX), scaleByPixelRatio(e.clientY));
+}));
+
+window.addEventListener("mouseup", (() => {
+    updatePointerUpData(pointers[0]);
+}));
+
+homePageBody.addEventListener("touchstart", (e => {
+    e.preventDefault();
+    const r = e.targetTouches;
+    while (r.length >= pointers.length) pointers.push(new pointerPrototype());
+    for (let e = 0; e < r.length; e++) {
+        let t = scaleByPixelRatio(r[e].pageX);
+        let n = scaleByPixelRatio(r[e].pageY);
+        updatePointerDownData(pointers[e + 1], r[e].identifier, t, n);
+    }
+}));
+
+homePageBody.addEventListener("touchmove", (e => {
+    e.preventDefault();
+    const r = e.targetTouches;
+    for (let e = 0; e < r.length; e++) {
+        let t = pointers[e + 1];
+        if (t.down) updatePointerMoveData(t, scaleByPixelRatio(r[e].pageX), scaleByPixelRatio(r[e].pageY));
+    }
+}), false);
+
+window.addEventListener("touchend", (e => {
+    const r = e.changedTouches;
+    for (let e = 0; e < r.length; e++) {
+        let t = pointers.find((t => t.id == r[e].identifier));
+        if (t != null) updatePointerUpData(t);
+    }
+}));
+</script>
 </body>
 </html>
