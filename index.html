@@ -184,17 +184,16 @@
             </div>
 
             <div class="hidden md:flex items-center gap-1 nav-pill rounded-full px-2 py-1.5">
-                <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Experience</a>
                 <a href="#skills" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Skills</a>
+                <a href="#experience" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Experience</a>
                 <a href="#projects" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Projects</a>
-                <a href="#" class="px-5 py-2 text-sm text-textMuted hover:text-white hover:bg-white/5 rounded-full transition-colors">Testimonial</a>
             </div>
 
             <div class="flex items-center gap-4">
-                <button class="flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 px-5 py-2.5 rounded-lg transition-all text-sm font-medium">
+                <a href="#connect" class="flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 px-5 py-2.5 rounded-lg transition-all text-sm font-medium">
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    Hire me
-                </button>
+                    Contact me
+                </a>
                 
                 <button class="md:hidden text-white text-xl p-2" onclick="toggleMenu()">
                     <i class="fa-solid fa-bars"></i>
@@ -203,10 +202,9 @@
         </div>
 
         <div id="mobile-menu" class="hidden absolute top-20 left-4 right-4 bg-surface border border-white/10 rounded-xl p-4 md:hidden flex-col gap-2 shadow-2xl">
-            <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Experience</a>
             <a href="#skills" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Skills</a>
+            <a href="#experience" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Experience</a>
             <a href="#projects" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Projects</a>
-            <a href="#" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-textMuted hover:text-white">Testimonial</a>
         </div>
     </nav>
 
@@ -217,23 +215,14 @@
 
         <div class="max-w-4xl mx-auto z-10 space-y-8 animate-fade-in-up">
             
-            <h1 class="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-[1.1]">
-                Creative <span class="text-white">Webflow</span><br>
-                <span class="text-white">development wizard</span>
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-[1.1] text-white">
+                Creative wizard
             </h1>
 
             <p class="text-textMuted text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-                Helping agencies deliver pixel-perfect Webflow websites without the overhead of an in-house team.
+                Crafting digital magic where ideas glitch into reality.<br>
+                I engineer possibilities that bend logic, time, and creativity.
             </p>
-
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                
-                <a href="#" class="group relative inline-flex items-center gap-2 bg-surface hover:bg-surfaceHover border border-white/10 text-white px-8 py-4 rounded-lg transition-all w-full sm:w-auto justify-center">
-                    <span class="font-medium">Work with me</span>
-                    <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
-                </a>
-
-            </div>
 
         </div>
     </main>
@@ -542,6 +531,16 @@
         </div>
     </section>
 
+    <section id="experience" class="w-full py-24 px-4 relative z-10 border-t border-white/5">
+        <div class="max-w-5xl mx-auto text-center space-y-6">
+            <p class="text-sm text-textMuted font-medium uppercase tracking-[0.3em]">Experience</p>
+            <h2 class="text-3xl font-semibold text-white">Crafting a timeline worth revisiting</h2>
+            <p class="text-textMuted max-w-3xl mx-auto">
+                Experience timeline dropping soon. I’m currently curating the highlights so they land with the same polish as everything else on this page.
+            </p>
+        </div>
+    </section>
+
     <section id="projects" class="w-full py-24 px-4 relative z-10">
         <div class="max-w-6xl mx-auto">
             <div class="mb-16 text-center md:text-left">
@@ -685,8 +684,33 @@
         </div>
     </div>
 
-    <footer class="w-full py-6 text-center text-white/20 text-xs relative z-10">
-        &copy; 2024 Yash Deep. All rights reserved.
+    <section id="connect" class="w-full py-16 px-4 relative z-10 border-t border-white/5">
+        <div class="max-w-5xl mx-auto flex flex-col gap-6 items-center text-center">
+            <p class="text-textMuted text-sm uppercase tracking-[0.3em]">Stay Connected</p>
+            <h3 class="text-2xl font-semibold text-white">Let’s build something bold together</h3>
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="https://github.com/yashdeep370" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 transition border border-white/10">
+                    <i class="fa-brands fa-github"></i>
+                    <span class="text-sm font-medium">GitHub</span>
+                </a>
+                <a href="https://www.linkedin.com/in/yashdeep1308/" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 transition border border-white/10">
+                    <i class="fa-brands fa-linkedin"></i>
+                    <span class="text-sm font-medium">LinkedIn</span>
+                </a>
+                <a href="https://medium.com/@yashdeep370" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 transition border border-white/10">
+                    <i class="fa-brands fa-medium"></i>
+                    <span class="text-sm font-medium">Medium</span>
+                </a>
+                <a href="https://www.instagram.com/yash.deep13/?igsh=ZjR3bGUwOTBhaTNq#" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 transition border border-white/10">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span class="text-sm font-medium">Instagram</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="w-full py-6 text-center text-white/30 text-xs relative z-10 border-t border-white/5">
+        &copy; 2025 Yash Deep. All rights reserved.
     </footer>
 
     <script>
