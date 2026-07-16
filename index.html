@@ -55,114 +55,7 @@
         }
     </script>
 
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            /* Removed background-color here to allow canvas to be visible */
-            color: white;
-            overflow-x: hidden;
-        }
-        
-        .nav-pill {
-            background-color: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* OPTIONAL: I commented out the old cursor glow because the fluid sim 
-           usually replaces this effect. Uncomment if you want both.
-        */
-        /*
-        #cursor-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(62, 139, 243, 0.15) 0%, rgba(255, 255, 255, 0.05) 25%, rgba(0, 0, 0, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            filter: blur(50px);
-            transition: transform 0.1s ease-out;
-            will-change: transform, top, left;
-        }
-        */
-
-        .text-gradient {
-            background: linear-gradient(to right, #ffffff, #9ca3af);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Flashcard Modal Styles */
-        .flashcard-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .flashcard-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .flashcard-modal {
-            background: linear-gradient(135deg, rgba(17, 17, 17, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 2.5rem;
-            max-width: 600px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(62, 139, 243, 0.1);
-        }
-
-        .flashcard-overlay.active .flashcard-modal {
-            transform: scale(1) translateY(0);
-        }
-
-        .flashcard-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .flashcard-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: rotate(90deg);
-        }
-    </style>
+    <link rel="stylesheet" href="./assets/css/main.css">
 </head>
 <body class="antialiased min-h-screen flex flex-col relative bg-black">
 
@@ -214,6 +107,15 @@
         <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none -z-10"></div>
 
         <div class="max-w-4xl mx-auto z-10 space-y-8 animate-fade-in-up">
+            
+            <!-- Availability Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-semibold tracking-wide w-fit mx-auto mb-2">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                Open to Work / Internships 2026
+            </div>
             
             <h1 class="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-[1.1] text-white">
                 Creative wizard
@@ -532,12 +434,79 @@
     </section>
 
     <section id="experience" class="w-full py-24 px-4 relative z-10 border-t border-white/5">
-        <div class="max-w-5xl mx-auto text-center space-y-6">
-            <p class="text-sm text-textMuted font-medium uppercase tracking-[0.3em]">Experience</p>
-            <h2 class="text-3xl font-semibold text-white">Crafting a timeline worth revisiting</h2>
-            <p class="text-textMuted max-w-3xl mx-auto">
-                Experience timeline dropping soon. I’m currently curating the highlights so they land with the same polish as everything else on this page.
-            </p>
+        <div class="max-w-5xl mx-auto space-y-12">
+            <div class="text-center space-y-3">
+                <p class="text-sm text-textMuted font-medium uppercase tracking-[0.3em]">My Journey</p>
+                <h2 class="text-3xl md:text-4xl font-semibold text-white">Experience</h2>
+            </div>
+            
+            <div class="relative pl-6 sm:pl-8 border-l border-white/10 max-w-3xl mx-auto space-y-12">
+                <!-- Timeline item 1 -->
+                <div class="relative group">
+                    <!-- Timeline Dot -->
+                    <div class="absolute -left-[32px] sm:-left-[40px] top-1.5 w-4 h-4 rounded-full bg-black border-2 border-purple-500 group-hover:scale-125 transition-transform duration-300 shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <h3 class="text-xl font-bold text-white group-hover:text-purple-300 transition-colors">Software Engineering Intern</h3>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 w-fit">June 2025 – Present</span>
+                        </div>
+                        <p class="text-sm font-medium text-textMuted">Tech Corp &bull; Remote</p>
+                        <p class="text-sm text-textMuted leading-relaxed">
+                            Collaborating with core development teams to engineer scalable full-stack web applications, optimize back-end queries, and design modern user interfaces.
+                        </p>
+                        <ul class="text-xs text-textMuted space-y-1.5 list-disc pl-5 mt-2">
+                            <li>Implemented RESTful API endpoints and integrated frontend components using React.</li>
+                            <li>Improved database query speed by 20% through custom schema indexing.</li>
+                            <li>Participated in daily agile stand-ups, code reviews, and architectural planning.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Timeline item 2 -->
+                <div class="relative group">
+                    <!-- Timeline Dot -->
+                    <div class="absolute -left-[32px] sm:-left-[40px] top-1.5 w-4 h-4 rounded-full bg-black border-2 border-blue-500 group-hover:scale-125 transition-transform duration-300 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <h3 class="text-xl font-bold text-white group-hover:text-blue-300 transition-colors">Freelance Web Developer</h3>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 w-fit">Jan 2024 – May 2025</span>
+                        </div>
+                        <p class="text-sm font-medium text-textMuted">Self-Employed &bull; Remote</p>
+                        <p class="text-sm text-textMuted leading-relaxed">
+                            Designed and deployed custom landing pages, portfolios, and e-commerce dashboards for local businesses and independent creators.
+                        </p>
+                        <ul class="text-xs text-textMuted space-y-1.5 list-disc pl-5 mt-2">
+                            <li>Built interactive UI components using Tailwind CSS and lightweight animations.</li>
+                            <li>Integrated headless CMS services and serverless forms to streamline page updates.</li>
+                            <li>Optimized sites for performance, SEO best practices, and cross-browser responsiveness.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Timeline item 3 -->
+                <div class="relative group">
+                    <!-- Timeline Dot -->
+                    <div class="absolute -left-[32px] sm:-left-[40px] top-1.5 w-4 h-4 rounded-full bg-black border-2 border-green-500 group-hover:scale-125 transition-transform duration-300 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <h3 class="text-xl font-bold text-white group-hover:text-green-300 transition-colors">Open Source Contributor</h3>
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-300 w-fit">June 2023 – Dec 2023</span>
+                        </div>
+                        <p class="text-sm font-medium text-textMuted">GitHub Community</p>
+                        <p class="text-sm text-textMuted leading-relaxed">
+                            Contributed code and documentation modifications to active Python, ML, and frontend repository workflows.
+                        </p>
+                        <ul class="text-xs text-textMuted space-y-1.5 list-disc pl-5 mt-2">
+                            <li>Optimized training datasets for hierarchical multi-label classification classifiers.</li>
+                            <li>Refactored modular UI code elements in open-source developer toolkits.</li>
+                            <li>Collaborated with global maintainers to fix open issues, clean tests, and update readmes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -552,118 +521,97 @@
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-fr">
                 
-                <!-- Large Featured Card - Spans 2 columns -->
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 transition-all duration-500 md:col-span-2 md:row-span-2 opacity-60 grayscale cursor-not-allowed">
-                    <div class="absolute inset-0 bg-black/40 z-20 rounded-2xl"></div>
+                <!-- Mentor Mentee Connect (Featured Card) -->
+                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500 md:col-span-2 md:row-span-2 flex flex-col justify-end min-h-[350px]">
+                    <div class="absolute inset-0 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2400&auto=format&fit=crop" alt="Mentor Mentee Connect" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    </div>
                     
-                    <div class="h-full overflow-hidden relative z-10">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" alt="Project 1" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-                    </div>
-
-                    <!-- Coming Soon Overlay -->
-                    <div class="absolute inset-0 z-30 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="w-16 h-16 mx-auto mb-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
-                                <i class="fa-solid fa-lock text-2xl text-white/60"></i>
+                    <div class="p-6 md:p-8 relative z-10 w-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-xs font-semibold text-purple-300">Featured</span>
+                                <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-textMuted">Full-Stack</span>
                             </div>
-                            <span class="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-sm font-medium text-white/80 border border-white/20">Coming Soon</span>
+                            <div class="flex items-center gap-3">
+                                <a href="https://github.com/yashdeep370/Mentor_Mentee_Connect" target="_blank" rel="noopener" class="text-textMuted hover:text-white transition-colors" title="GitHub Repository">
+                                    <i class="fa-brands fa-github text-xl"></i>
+                                </a>
+                                <a href="https://mentor-mentee-connect-8402.onrender.com/" target="_blank" rel="noopener" class="text-textMuted hover:text-white transition-colors" title="Live Demo">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-lg"></i>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="p-6 md:p-8 absolute bottom-0 left-0 w-full z-10">
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">Web Design</span>
-                            <span class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">Development</span>
-                        </div>
-                        <h3 class="text-2xl md:text-3xl font-semibold text-white/80 mb-2">Digital Experience</h3>
-                        <p class="text-textMuted/60 text-sm md:text-base">
-                            A complete overhaul of the digital presence for a leading fintech startup, focusing on user acquisition and trust.
+                        <h3 class="text-2xl md:text-3xl font-semibold text-white mb-2">Mentor Mentee Connect</h3>
+                        <p class="text-textMuted text-sm md:text-base leading-relaxed">
+                            A pairing platform connecting mentors and mentees based on interests and goals. Features scheduled calendars, chat rooms, and progress tracking dashboard.
                         </p>
                     </div>
                 </div>
 
-                <!-- Medium Card 1 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 transition-all duration-500 md:col-span-2 opacity-60 grayscale cursor-not-allowed">
-                    <div class="absolute inset-0 bg-black/40 z-20 rounded-2xl"></div>
-
-                    <div class="aspect-[16/9] overflow-hidden relative z-10">
-                        <img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=2370&auto=format&fit=crop" alt="Project 2" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <!-- Multi-Label Sentiment Analyzer (Medium Card) -->
+                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500 md:col-span-2 flex flex-col justify-end min-h-[200px]">
+                    <div class="absolute inset-0 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=2370&auto=format&fit=crop" alt="Sentiment Analyzer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
                     </div>
-
-                    <!-- Coming Soon Overlay -->
-                    <div class="absolute inset-0 z-30 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="w-12 h-12 mx-auto mb-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
-                                <i class="fa-solid fa-lock text-xl text-white/60"></i>
+                    
+                    <div class="p-6 relative z-10 w-full">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-textMuted">Machine Learning</span>
                             </div>
-                            <span class="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/80 border border-white/20">Coming Soon</span>
+                            <a href="https://github.com/yashdeep370" target="_blank" rel="noopener" class="text-textMuted hover:text-white transition-colors" title="GitHub Repository">
+                                <i class="fa-brands fa-github text-lg"></i>
+                            </a>
                         </div>
-                    </div>
-
-                    <div class="p-6 absolute bottom-0 left-0 w-full z-10">
-                        <div class="flex flex-wrap gap-2 mb-3">
-                            <span class="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">E-commerce</span>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white/80 mb-1">Modern Commerce</h3>
-                        <p class="text-textMuted/60 text-xs line-clamp-2">
-                            Building a scalable e-commerce platform for a luxury fashion brand.
+                        <h3 class="text-xl font-semibold text-white mb-1">Sentiment Analytics Hub</h3>
+                        <p class="text-textMuted text-xs leading-relaxed line-clamp-2">
+                            Hierarchical model classifying video facial emotions and script textual inputs.
                         </p>
                     </div>
                 </div>
 
-                <!-- Small Card 1 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 transition-all duration-500 opacity-60 grayscale cursor-not-allowed">
-                    <div class="absolute inset-0 bg-black/40 z-20 rounded-2xl"></div>
-
-                    <div class="aspect-square overflow-hidden relative z-10">
-                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Project 3" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <!-- Project 3 (Small Card 1) -->
+                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500 flex flex-col justify-end min-h-[200px]">
+                    <div class="absolute inset-0 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Modern Commerce" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
                     </div>
-
-                    <!-- Coming Soon Overlay -->
-                    <div class="absolute inset-0 z-30 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="w-10 h-10 mx-auto mb-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
-                                <i class="fa-solid fa-lock text-lg text-white/60"></i>
-                            </div>
-                            <span class="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/80 border border-white/20">Coming Soon</span>
+                    
+                    <div class="p-4 relative z-10 w-full">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-textMuted">E-Commerce</span>
+                            <a href="https://github.com/yashdeep370" target="_blank" rel="noopener" class="text-textMuted hover:text-white transition-colors">
+                                <i class="fa-brands fa-github text-base"></i>
+                            </a>
                         </div>
-                    </div>
-
-                    <div class="p-4 absolute bottom-0 left-0 w-full z-10">
-                        <div class="flex flex-wrap gap-2 mb-2">
-                            <span class="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">Branding</span>
-                        </div>
-                        <h3 class="text-lg font-semibold text-white/80">Abstract Identity</h3>
+                        <h3 class="text-lg font-semibold text-white mb-1">Modern Commerce Suite</h3>
+                        <p class="text-textMuted text-xs leading-relaxed line-clamp-2">
+                            A client dashboard featuring payments flow and secure checkout.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Small Card 2 -->
-                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 transition-all duration-500 opacity-60 grayscale cursor-not-allowed">
-                    <div class="absolute inset-0 bg-black/40 z-20 rounded-2xl"></div>
-
-                    <div class="aspect-square overflow-hidden relative z-10">
-                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2370&auto=format&fit=crop" alt="Project 4" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <!-- Project 4 (Small Card 2) -->
+                <div class="group relative rounded-2xl overflow-hidden bg-surface border border-white/5 hover:border-white/10 transition-all duration-500 flex flex-col justify-end min-h-[200px]">
+                    <div class="absolute inset-0 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2370&auto=format&fit=crop" alt="Creative Tech" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
                     </div>
-
-                    <!-- Coming Soon Overlay -->
-                    <div class="absolute inset-0 z-30 flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="w-10 h-10 mx-auto mb-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
-                                <i class="fa-solid fa-lock text-lg text-white/60"></i>
-                            </div>
-                            <span class="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/80 border border-white/20">Coming Soon</span>
+                    
+                    <div class="p-4 relative z-10 w-full">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-textMuted">Creative Coding</span>
+                            <a href="https://github.com/yashdeep370" target="_blank" rel="noopener" class="text-textMuted hover:text-white transition-colors">
+                                <i class="fa-brands fa-github text-base"></i>
+                            </a>
                         </div>
-                    </div>
-
-                    <div class="p-4 absolute bottom-0 left-0 w-full z-10">
-                        <div class="flex flex-wrap gap-2 mb-2">
-                            <span class="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-medium text-white/60 border border-white/10">SaaS</span>
-                        </div>
-                        <h3 class="text-lg font-semibold text-white/80">Tech Dashboard</h3>
+                        <h3 class="text-lg font-semibold text-white mb-1">WebGL Fluid Sim</h3>
+                        <p class="text-textMuted text-xs leading-relaxed line-clamp-2">
+                            GPU fluid simulation canvas overlay with mouse interaction.
+                        </p>
                     </div>
                 </div>
 
@@ -684,26 +632,75 @@
         </div>
     </div>
 
-    <section id="connect" class="w-full py-16 px-4 relative z-10 border-t border-white/5">
-        <div class="max-w-5xl mx-auto flex flex-col gap-6 items-center text-center">
-            <p class="text-textMuted text-sm uppercase tracking-[0.3em]">Stay Connected</p>
-            <h3 class="text-2xl font-semibold text-white">Let’s build something bold together</h3>
-            <div class="flex flex-wrap items-center justify-center gap-4">
-                <a href="https://github.com/yashdeep370" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 transition border border-white/10">
+    <section id="connect" class="w-full py-24 px-4 relative z-10 border-t border-white/5">
+        <div class="max-w-5xl mx-auto flex flex-col gap-10 items-center text-center">
+            <div class="space-y-3">
+                <p class="text-textMuted text-sm uppercase tracking-[0.3em]">Stay Connected</p>
+                <h3 class="text-3xl md:text-4xl font-semibold text-white">Let’s build something bold together</h3>
+            </div>
+
+            <!-- Glassmorphic Form and Action Box -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl text-left">
+                <!-- Left panel: Contact message & Resume -->
+                <div class="flex flex-col justify-between p-8 rounded-3xl bg-surface/30 border border-white/5 backdrop-blur-xl space-y-8">
+                    <div class="space-y-4">
+                        <h4 class="text-2xl font-semibold text-white">Have a project in mind?</h4>
+                        <p class="text-sm text-textMuted leading-relaxed">
+                            Whether you need a full-stack platform, machine learning integration, or a creative user experience, feel free to reach out. I am open to internships, full-time positions, and collaborations.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Resume Download Link -->
+                        <a href="#" download class="group relative flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-white text-black font-semibold hover:bg-white/90 transition-colors shadow-lg shadow-white/5 overflow-hidden">
+                            <span class="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                            <i class="fa-solid fa-file-arrow-down text-lg"></i>
+                            Download Resume
+                        </a>
+                        <p class="text-[11px] text-textMuted text-center">PDF Format • CV last updated June 2026</p>
+                    </div>
+                </div>
+
+                <!-- Right panel: Interactive Contact Form -->
+                <form action="#" method="POST" class="flex flex-col p-8 rounded-3xl bg-surface/30 border border-white/5 backdrop-blur-xl gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label for="contact-name" class="text-xs font-semibold text-textMuted uppercase tracking-wider">Your Name</label>
+                        <input type="text" id="contact-name" name="name" placeholder="John Doe" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 focus:border-purple-500/50 focus:bg-white/10 outline-none transition-all text-sm">
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label for="contact-email" class="text-xs font-semibold text-textMuted uppercase tracking-wider">Email Address</label>
+                        <input type="email" id="contact-email" name="email" placeholder="john@example.com" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 focus:border-purple-500/50 focus:bg-white/10 outline-none transition-all text-sm">
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label for="contact-message" class="text-xs font-semibold text-textMuted uppercase tracking-wider">Message</label>
+                        <textarea id="contact-message" name="message" rows="4" placeholder="Let's build something new..." required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 focus:border-purple-500/50 focus:bg-white/10 outline-none transition-all text-sm resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold text-sm transition-all shadow-md shadow-purple-500/10">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Social Links underneath -->
+            <div class="flex flex-wrap items-center justify-center gap-4 mt-4">
+                <a href="https://github.com/yashdeep370" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 transition border border-white/10 text-textMuted hover:text-white" title="GitHub">
                     <i class="fa-brands fa-github"></i>
-                    <span class="text-sm font-medium">GitHub</span>
+                    <span class="text-xs font-semibold">GitHub</span>
                 </a>
-                <a href="https://www.linkedin.com/in/yashdeep1308/" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 transition border border-white/10">
+                <a href="https://www.linkedin.com/in/yashdeep1308/" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 transition border border-white/10 text-textMuted hover:text-white" title="LinkedIn">
                     <i class="fa-brands fa-linkedin"></i>
-                    <span class="text-sm font-medium">LinkedIn</span>
+                    <span class="text-xs font-semibold">LinkedIn</span>
                 </a>
-                <a href="https://medium.com/@yashdeep370" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 transition border border-white/10">
+                <a href="https://medium.com/@yashdeep370" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 transition border border-white/10 text-textMuted hover:text-white" title="Medium">
                     <i class="fa-brands fa-medium"></i>
-                    <span class="text-sm font-medium">Medium</span>
+                    <span class="text-xs font-semibold">Medium</span>
                 </a>
-                <a href="https://www.instagram.com/yash.deep13/?igsh=ZjR3bGUwOTBhaTNq#" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 transition border border-white/10">
+                <a href="https://www.instagram.com/yash.deep13/?igsh=ZjR3bGUwOTBhaTNq#" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 transition border border-white/10 text-textMuted hover:text-white" title="Instagram">
                     <i class="fa-brands fa-instagram"></i>
-                    <span class="text-sm font-medium">Instagram</span>
+                    <span class="text-xs font-semibold">Instagram</span>
                 </a>
             </div>
         </div>
@@ -713,356 +710,8 @@
         &copy; 2025 Yash Deep. All rights reserved.
     </footer>
 
-    <script>
-        // Simple Mobile Menu Toggle
-        function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('flex');
-        }
-
-        // Cursor Glow Effect
-        const cursorGlow = document.getElementById('cursor-glow');
-
-        // Only run on desktop/large screens to save performance on mobile
-        if (window.matchMedia("(pointer: fine)").matches) {
-            document.addEventListener('mousemove', (e) => {
-                // Update position
-                // Use requestAnimationFrame for smoother performance
-                requestAnimationFrame(() => {
-                    // Ensure cursorGlow exists before setting style
-                    if (cursorGlow) {
-                        cursorGlow.style.left = e.clientX + 'px';
-                        cursorGlow.style.top = e.clientY + 'px';
-                    }
-                });
-            });
-        } else {
-            // Center it or hide it on touch devices
-            if (cursorGlow) {
-                cursorGlow.style.display = 'none';
-            }
-        }
-
-        // Flashcard Modal Functions
-        const flashcardContents = {
-            fullstack: `
-                <h2 class="text-3xl font-bold text-white mb-4 flex items-center gap-2">
-                    <span class="text-2xl">🌐</span> Full Stack Developer
-                </h2>
-                <p class="text-textMuted text-lg mb-6 leading-relaxed italic">
-                    Building seamless digital experiences from pixels to production — infinitely scalable.
-                </p>
-                
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
-                        <span>📌</span> Summary
-                    </h3>
-                    <p class="text-textMuted leading-relaxed">
-                        Full Stack Developer with strong expertise in building responsive websites, modern front-end interfaces, backend APIs, and intuitive user experiences. Skilled in blending development with UI/UX design and creative branding to deliver polished, high-impact digital products.
-                    </p>
-                </div>
-
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                        <span>💻</span> Core Skills
-                    </h3>
-                    
-                    <div class="space-y-6">
-                        <div class="border-l-2 border-purple-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>🖥</span> Frontend Development
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>HTML5, CSS3, JavaScript (ES6+)</li>
-                                <li>React.js / Next.js basics</li>
-                                <li>Responsive, mobile-first design</li>
-                                <li>Tailwind CSS / Bootstrap</li>
-                                <li>Component-based UI development</li>
-                                <li>State management fundamentals</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-purple-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>🛠</span> Backend Development
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Node.js, Express.js</li>
-                                <li>RESTful API design</li>
-                                <li>Authentication (JWT / Sessions)</li>
-                                <li>Basic database operations (MongoDB / SQL)</li>
-                                <li>Server routing & middleware</li>
-                                <li>Git, GitHub, version control workflow</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-purple-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>🎨</span> UI & UX Design
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>User flow & wireframe creation</li>
-                                <li>Design systems & style guides</li>
-                                <li>Prototyping (Figma)</li>
-                                <li>Accessibility-focused design</li>
-                                <li>Usability testing & iteration</li>
-                                <li>Interaction design fundamentals</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-purple-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>✨</span> Graphic Design
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Brand identity & logo creation</li>
-                                <li>Poster, banner, and social media creatives</li>
-                                <li>Typography layouts</li>
-                                <li>Color theory & visual hierarchy</li>
-                                <li>Adobe Photoshop / Illustrator basics</li>
-                                <li>Creative asset building for web</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-purple-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>🌐</span> Web Design
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Landing page design</li>
-                                <li>Portfolio & corporate website layout</li>
-                                <li>Modern visual aesthetics</li>
-                                <li>CTA optimization</li>
-                                <li>Layout spacing & composition</li>
-                                <li>Converting designs to functional front end</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                        <span>⚙️</span> Tools & Technologies
-                    </h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">VS Code</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">Figma</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">Adobe Suite</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">Git & GitHub</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm">Browser DevTools</span>
-                    </div>
-                </div>
-            `,
-            'datascience-detailed': `
-                <h2 class="text-3xl font-bold text-white mb-4 flex items-center gap-2">
-                    <span class="text-2xl">🔹</span> Data Science
-                </h2>
-                <p class="text-textMuted text-lg mb-6 leading-relaxed italic">
-                    Turning raw data into infinite possibilities.
-                </p>
-                
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
-                        <span>📌</span> Summary
-                    </h3>
-                    <p class="text-textMuted leading-relaxed">
-                        Data Science enthusiast skilled in extracting insights, building predictive models, and transforming data into intelligent business decisions. Strong foundation in statistics, machine learning, data cleaning, and visualization with hands-on experience in Python-based data workflows.
-                    </p>
-                </div>
-
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                        <span>📘</span> Core Skills
-                    </h3>
-                    
-                    <div class="space-y-6">
-                        <div class="border-l-2 border-blue-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>📊</span> Data Analytics
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Exploratory Data Analysis (EDA)</li>
-                                <li>Statistical analysis & hypothesis testing</li>
-                                <li>Data wrangling & preprocessing</li>
-                                <li>Feature engineering</li>
-                                <li>Business insight generation</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-blue-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>📈</span> Data Visualization
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Matplotlib, Plotly, Seaborn</li>
-                                <li>Dashboarding (Power BI / Tableau)</li>
-                                <li>Storytelling with data</li>
-                                <li>Designing clear, decision-driven visuals</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-blue-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>🗂</span> Data Manipulation
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Pandas, NumPy</li>
-                                <li>Handling missing values, outliers</li>
-                                <li>Merging, grouping, transforming datasets</li>
-                                <li>Working with large CSV, Excel, and JSON data</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-blue-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>🤖</span> Machine Learning Basics
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Regression, Classification</li>
-                                <li>Train-test-split, model tuning</li>
-                                <li>Metrics: accuracy, RMSE, F1-score</li>
-                                <li>Model evaluation & improvement</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                        <span>🛠</span> Tools & Technologies
-                    </h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">Python</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">Jupyter Notebook</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">SQL basics</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">Excel for analytics</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 text-sm">Git & GitHub</span>
-                    </div>
-                </div>
-            `,
-            aiml: `
-                <h2 class="text-3xl font-bold text-white mb-4 flex items-center gap-2">
-                    <span class="text-2xl">🤖</span> Artificial Intelligence & Machine Learning
-                </h2>
-                <p class="text-textMuted text-lg mb-6 leading-relaxed italic">
-                    Designing systems that learn, adapt, and scale infinitely.
-                </p>
-                
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
-                        <span>📌</span> Summary
-                    </h3>
-                    <p class="text-textMuted leading-relaxed">
-                        AI/ML practitioner focused on building intelligent systems, training predictive models, and applying algorithms that enable machines to think, learn, and evolve. Strong understanding of model lifecycle, optimization, and deployment fundamentals.
-                    </p>
-                </div>
-
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                        <span>🧠</span> Core Skills
-                    </h3>
-                    
-                    <div class="space-y-6">
-                        <div class="border-l-2 border-green-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>📐</span> Machine Learning
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Supervised & Unsupervised learning</li>
-                                <li>Regression, Classification, Clustering</li>
-                                <li>Feature selection & engineering</li>
-                                <li>Model tuning: GridSearch, RandomizedSearch</li>
-                                <li>Evaluation metrics (Accuracy, Precision, Recall, F1, AUC)</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-green-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>🤖</span> Artificial Intelligence Concepts
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Neural Networks basics</li>
-                                <li>Perceptron, activation functions</li>
-                                <li>Computer vision fundamentals</li>
-                                <li>Natural Language Processing (NLP) basics</li>
-                                <li>Reinforcement learning intuition</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-green-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>📊</span> Model Development Workflow
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>Data preprocessing</li>
-                                <li>Train–test split, cross-validation</li>
-                                <li>Overfitting / underfitting handling</li>
-                                <li>Bias–variance tradeoff</li>
-                                <li>Model interpretation & explainability</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-2 border-green-500/50 pl-4">
-                            <h4 class="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                <span>🧪</span> Deep Learning Foundation
-                            </h4>
-                            <ul class="text-textMuted space-y-1.5 text-sm ml-6 list-disc">
-                                <li>TensorFlow / Keras basics</li>
-                                <li>ANN architecture understanding</li>
-                                <li>Backpropagation intuition</li>
-                                <li>Working with image & text datasets</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                        <span>🛠</span> Tools & Technologies
-                    </h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">Python</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">Scikit-learn</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">TensorFlow / Keras</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">NumPy, Pandas</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">Jupyter Notebook</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">Git & GitHub</span>
-                    </div>
-                </div>
-            `
-        };
-
-        function openFlashcard(type) {
-            const overlay = document.getElementById('flashcard-overlay');
-            const content = document.getElementById('flashcard-content');
-            
-            if (flashcardContents[type]) {
-                content.innerHTML = flashcardContents[type];
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeFlashcard() {
-            const overlay = document.getElementById('flashcard-overlay');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function closeFlashcardOnOverlay(event) {
-            if (event.target === event.currentTarget) {
-                closeFlashcard();
-            }
-        }
-
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeFlashcard();
-            }
-        });
-    </script>
+    <script src="./assets/js/nav.js"></script>
+    <script src="./assets/js/flashcards.js"></script>
     
     <script src="./script.js"></script>
 </body>

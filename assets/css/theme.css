@@ -1,0 +1,274 @@
+/* Portfolio theme — design tokens & background layer (Option A–friendly) */
+
+:root {
+    --bg: 0 0% 4%;
+    --surface: 0 0% 8%;
+    --text: 0 0% 96%;
+    --muted: 0 0% 53%;
+    --stroke: 0 0% 12%;
+    --accent: 0 0% 96%;
+    --font-body: 'Inter', sans-serif;
+    --font-display: 'Instrument Serif', serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: hsl(var(--bg));
+    color: hsl(var(--text));
+    overflow-x: hidden;
+}
+
+body.is-loading {
+    overflow: hidden;
+}
+
+/* Fluid sim sits under themed layers */
+.splash-canvas {
+    opacity: 0.28;
+}
+
+.accent-gradient {
+    background: linear-gradient(90deg, #89aacc 0%, #4e85bf 100%);
+}
+
+.accent-gradient-text {
+    background: linear-gradient(90deg, #89aacc 0%, #4e85bf 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gradient-border-ring {
+    position: relative;
+}
+
+.gradient-border-ring::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(90deg, #89aacc, #4e85bf, #89aacc);
+    background-size: 200% 100%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: gradient-shift 6s ease infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.gradient-border-ring:hover::before {
+    opacity: 1;
+}
+
+@keyframes scroll-down {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    40% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(200%);
+        opacity: 0;
+    }
+}
+
+@keyframes role-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gradient-shift {
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes loading-word-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes loading-word-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes loading-label-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-scroll-down {
+    animation: scroll-down 1.5s ease-in-out infinite;
+}
+
+.animate-role-fade-in {
+    animation: role-fade-in 0.4s ease-out forwards;
+}
+
+.font-display {
+    font-family: var(--font-display);
+}
+
+/* Nav pill — aligned with reference theme */
+.nav-pill {
+    background-color: hsl(var(--surface) / 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(0 0% 100% / 0.1);
+}
+
+.nav-scrolled .nav-pill,
+.nav-scrolled .nav-contact {
+    box-shadow: 0 4px 24px hsl(0 0% 0% / 0.35);
+}
+
+/* Legacy gradient helper */
+.text-gradient {
+    background: linear-gradient(to right, hsl(var(--text)), hsl(var(--muted)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ——— Loading screen ——— */
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: hsl(var(--bg));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#loading-screen.is-done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#loading-screen .loading-label {
+    animation: loading-label-in 0.6s ease-out forwards;
+}
+
+#loading-screen .loading-word {
+    animation: loading-word-in 0.45s ease-out forwards;
+}
+
+#loading-screen .loading-word.is-exit {
+    animation: loading-word-out 0.35s ease-in forwards;
+}
+
+#loading-screen .loading-progress-track {
+    height: 3px;
+    background: hsl(var(--stroke) / 0.5);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+#loading-screen .loading-progress-fill {
+    height: 100%;
+    transform-origin: left center;
+    background: linear-gradient(90deg, #89aacc 0%, #4e85bf 100%);
+    box-shadow: 0 0 8px rgba(137, 170, 204, 0.35);
+    transition: transform 0.05s linear;
+}
+
+/* ——— Hero video background ——— */
+#hero .hero-video-layer {
+    pointer-events: none;
+}
+
+#hero .hero-video-layer video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+}
+
+#hero .hero-fade-bottom {
+    background: linear-gradient(to top, hsl(var(--bg)), transparent);
+}
+
+/* Scroll indicator line highlight */
+.scroll-line {
+    position: relative;
+    overflow: hidden;
+}
+
+.scroll-line::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(90deg, #89aacc, #4e85bf);
+    animation: scroll-down 1.5s ease-in-out infinite;
+}
+
+/* Flashcards — theme accent */
+.flashcard-modal {
+    box-shadow:
+        0 20px 60px hsl(0 0% 0% / 0.5),
+        0 0 40px rgba(137, 170, 204, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-scroll-down,
+    .scroll-line::after,
+    #loading-screen .loading-word,
+    .splash-canvas {
+        animation: none !important;
+    }
+
+    .splash-canvas {
+        opacity: 0.15;
+    }
+}
