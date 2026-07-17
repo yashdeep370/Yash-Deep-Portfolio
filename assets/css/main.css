@@ -90,3 +90,39 @@ body {
     color: #ffffff !important;
 }
 
+/* Scroll-reveal (elements get .reveal via JS, .revealed when in view) */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hero role rotator caret */
+.type-caret {
+    animation: caretBlink 1s step-end infinite;
+}
+
+@keyframes caretBlink {
+    50% { opacity: 0; }
+}
+
+/* Project card spotlight (element injected by effects.js) */
+.card-spotlight {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(420px circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(147, 130, 255, 0.15), transparent 65%);
+}
+
+.group:hover .card-spotlight {
+    opacity: 1;
+}
+
