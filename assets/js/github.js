@@ -31,12 +31,4 @@
             starsEl.textContent = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
         })
         .catch(() => {});
-
-    const chart = document.getElementById("gh-chart");
-    if (chart) {
-        chart.addEventListener("error", () => {
-            const panel = chart.closest("[data-gh-chart-panel]");
-            if (panel) panel.style.display = "none";
-        });
-    }
 })();
