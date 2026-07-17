@@ -40,7 +40,7 @@
 
     // --- Scroll-reveal ---
     const revealTargets = document.querySelectorAll(
-        "section h2, #solutions .grid > div, #skills .grid > div, #experience .group, #certifications .grid > div, #projects .grid > div, #github .grid > div, #connect .grid > div"
+        "section h2, #solutions .grid > div, #skills .grid > div, #experience .group, #certifications .grid > div, #projects .grid > div, #connect .grid > div"
     );
     if (!reducedMotion && "IntersectionObserver" in window) {
         const observer = new IntersectionObserver((entries) => {
