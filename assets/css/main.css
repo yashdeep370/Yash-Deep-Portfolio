@@ -126,3 +126,57 @@ body {
     opacity: 1;
 }
 
+/* Skills terminal */
+.skill-tab {
+    transition: all 0.2s ease;
+}
+
+.skill-tab:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.skill-tab.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.15);
+}
+
+#term-out::after {
+    content: "\258C";
+    margin-left: 2px;
+    color: #a855f7;
+    animation: caretBlink 1s step-end infinite;
+}
+
+/* Glowy scrollbar (webkit + Firefox fallback) */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #7c5cf0 #050505;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(168, 85, 247, 0.55), rgba(62, 139, 243, 0.55));
+    border-radius: 8px;
+    border: 2px solid #050505;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #a855f7, #3e8bf3);
+}
+
+/* Brighter, glowing thumb while the page is actively scrolling */
+body.is-scrolling::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #a855f7, #3e8bf3);
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.35);
+}
+

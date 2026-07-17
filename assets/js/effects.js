@@ -40,7 +40,7 @@
 
     // --- Scroll-reveal ---
     const revealTargets = document.querySelectorAll(
-        "section h2, #solutions .grid > div, #skills .grid > div, #experience .group, #education .grid > div, #certifications .grid > div, #projects .grid > div, #connect .grid > div"
+        "section h2, #solutions .grid > div, #skill-terminal-wrap, #experience .group, #education .grid > div, #certifications .grid > div, #projects .grid > div, #connect .grid > div"
     );
     if (!reducedMotion && "IntersectionObserver" in window) {
         const observer = new IntersectionObserver((entries) => {
@@ -57,6 +57,90 @@
             observer.observe(el);
         });
     }
+
+    // --- Skills terminal rotator ---
+    const termCmd = document.getElementById("term-cmd");
+    const termOut = document.getElementById("term-out");
+    if (termCmd && termOut) {
+        const SKILLS = [
+            {
+                key: "fullstack",
+                cmd: "skills --show full-stack",
+                out: "Frontend + backend + UI/UX — building seamless, end-to-end web experiences."
+            },
+            {
+                key: "datascience-detailed",
+                cmd: "skills --show data-science",
+                out: "Turning raw data into insight with analytics, visualization & manipulation."
+            },
+            {
+                key: "aiml",
+                cmd: "skills --show ai-ml",
+                out: "Intelligent systems — Gen AI, RAG & LLMs, deep learning, model deployment."
+            }
+        ];
+        const tabs = document.querySelectorAll(".skill-tab");
+        const detailsBtn = document.getElementById("skill-details");
+        let current = 0;
+        let seq = 0; // invalidates in-flight typing when the skill changes
+
+        const setActiveTab = () => {
+            tabs.forEach((tab, i) => tab.classList.toggle("active", i === current));
+        };
+
+        const showSkill = (index, animate) => {
+            current = index;
+            setActiveTab();
+            const mySeq = ++seq;
+            const skill = SKILLS[index];
+            if (!animate) {
+                termCmd.textContent = skill.cmd;
+                termOut.textContent = skill.out;
+                return;
+            }
+            termCmd.textContent = "";
+            termOut.textContent = "";
+            let ci = 0;
+            (function typeCmd() {
+                if (mySeq !== seq) return;
+                if (ci < skill.cmd.length) {
+                    termCmd.textContent += skill.cmd[ci++];
+                    setTimeout(typeCmd, 45);
+                    return;
+                }
+                let oi = 0;
+                (function typeOut() {
+                    if (mySeq !== seq) return;
+                    if (oi < skill.out.length) {
+                        termOut.textContent += skill.out[oi++];
+                        setTimeout(typeOut, 18);
+                        return;
+                    }
+                    setTimeout(() => {
+                        if (mySeq === seq) showSkill((current + 1) % SKILLS.length, true);
+                    }, 4000);
+                })();
+            })();
+        };
+
+        tabs.forEach((tab, i) => {
+            tab.addEventListener("click", () => showSkill(i, !reducedMotion));
+        });
+        if (detailsBtn) {
+            detailsBtn.addEventListener("click", () => {
+                if (typeof openFlashcard === "function") openFlashcard(SKILLS[current].key);
+            });
+        }
+        showSkill(0, !reducedMotion);
+    }
+
+    // --- Glowy scrollbar while scrolling ---
+    let scrollGlowTimer;
+    window.addEventListener("scroll", () => {
+        document.body.classList.add("is-scrolling");
+        clearTimeout(scrollGlowTimer);
+        scrollGlowTimer = setTimeout(() => document.body.classList.remove("is-scrolling"), 600);
+    }, { passive: true });
 
     // --- Project card tilt + spotlight (desktop pointers only) ---
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;

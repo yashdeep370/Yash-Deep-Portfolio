@@ -302,50 +302,38 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="group rounded-3xl border border-white/5 bg-surface/40 p-8 backdrop-blur-xl hover:-translate-y-1 hover:border-white/10 transition-all cursor-pointer" onclick="openFlashcard('fullstack')">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-300 flex items-center justify-center mb-6">
-                        <i class="fa-solid fa-compass text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3 text-white">Full-Stack Development</h3>
-                    <p class="text-textMuted text-sm leading-relaxed">
-                        Build seamless, end-to-end digital experiences by combining robust frontend engineering, scalable backend systems, and user-centered design principles.
-                    </p>
-                    <ul class="mt-6 space-y-2 text-sm text-textMuted">
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Frontend Engineering</li>
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Backend Development</li>
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> UI & UX Design</li>
-                    </ul>
+            <div id="skill-terminal-wrap" class="max-w-2xl mx-auto space-y-6">
+
+                <!-- Skill tabs -->
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <button type="button" data-skill="0" class="skill-tab px-4 py-2 rounded-full bg-white/5 border border-white/10 text-textMuted text-sm font-medium cursor-pointer">
+                        <i class="fa-solid fa-compass mr-1.5 text-purple-300"></i>Full-Stack
+                    </button>
+                    <button type="button" data-skill="1" class="skill-tab px-4 py-2 rounded-full bg-white/5 border border-white/10 text-textMuted text-sm font-medium cursor-pointer">
+                        <i class="fa-solid fa-chart-line mr-1.5 text-blue-300"></i>Data Science
+                    </button>
+                    <button type="button" data-skill="2" class="skill-tab px-4 py-2 rounded-full bg-white/5 border border-white/10 text-textMuted text-sm font-medium cursor-pointer">
+                        <i class="fa-solid fa-brain mr-1.5 text-green-300"></i>AI &amp; ML
+                    </button>
                 </div>
 
-                <div class="group rounded-3xl border border-white/5 bg-surface/40 p-8 backdrop-blur-xl hover:-translate-y-1 hover:border-white/10 transition-all cursor-pointer" onclick="openFlashcard('datascience-detailed')">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-300 flex items-center justify-center mb-6">
-                        <i class="fa-solid fa-chart-line text-xl"></i>
+                <!-- Terminal -->
+                <div class="rounded-2xl border border-white/10 bg-[#0c0c0c] shadow-2xl shadow-purple-500/5 overflow-hidden text-left">
+                    <div class="flex items-center gap-2 px-4 py-3 bg-white/5 border-b border-white/5">
+                        <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                        <span class="ml-3 text-xs text-textMuted font-mono">yash@portfolio: ~/skills</span>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3 text-white">Data Science</h3>
-                    <p class="text-textMuted text-sm leading-relaxed">
-                        Turn raw, unstructured information into strategic insights through analytical thinking, statistical modeling, and modern data workflows.
-                    </p>
-                    <ul class="mt-6 space-y-2 text-sm text-textMuted">
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Data Analytics</li>
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Data Visualization</li>
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Data Manipulation</li>
-                    </ul>
-                </div>
-
-                <div class="group rounded-3xl border border-white/5 bg-surface/40 p-8 backdrop-blur-xl hover:-translate-y-1 hover:border-white/10 transition-all cursor-pointer" onclick="openFlashcard('aiml')">
-                    <div class="w-12 h-12 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-300 flex items-center justify-center mb-6">
-                        <i class="fa-solid fa-brain text-xl"></i>
+                    <div class="p-6 font-mono text-sm leading-relaxed min-h-[130px]">
+                        <p class="text-textMuted break-words"><span class="text-green-400">$</span> <span id="term-cmd" class="text-white"></span></p>
+                        <p id="term-out" class="text-textMuted mt-3 break-words"></p>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3 text-white">Artificial Intelligence & Machine Learning</h3>
-                    <p class="text-textMuted text-sm leading-relaxed">
-                        Build intelligent systems that learn from data, automate decision-making, and unlock insights through predictive modeling and algorithmic innovation.
-                    </p>
-                    <ul class="mt-6 space-y-2 text-sm text-textMuted">
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Model Development</li>
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Deep Learning</li>
-                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> ML Workflow & Deployment</li>
-                    </ul>
+                    <div class="px-6 pb-5 flex justify-end">
+                        <button type="button" id="skill-details" class="text-xs font-mono text-purple-300 hover:text-white transition-colors cursor-pointer">
+                            view full details <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
