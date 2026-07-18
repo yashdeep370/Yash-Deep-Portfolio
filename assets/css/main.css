@@ -1,5 +1,7 @@
 html {
     scroll-behavior: smooth;
+    /* Keeps anchored sections clear of the fixed nav when jumping via links */
+    scroll-padding-top: 6rem;
 }
 
 body {
